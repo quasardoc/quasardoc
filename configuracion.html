@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configuración - Demo</title>
+    <link rel="icon" type="image/png" href="logoblanco.png">
+    <link rel="stylesheet" href="static/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Configuración de la Compañía (Demo)</h1>
+        </header>
+
+        <form id="config-form">
+            <div class="form-group">
+                <label for="nombre_compania">Nombre de la Compañía</label>
+                <input type="text" id="nombre_compania" name="nombre_compania" required>
+            </div>
+
+            <div class="form-group">
+                <label for="departamento">Departamento</label>
+                <input type="text" id="departamento" name="departamento">
+            </div>
+
+            <div class="form-group">
+                <label for="ruta_directorio">Ruta del Directorio (simulado)</label>
+                <input type="text" id="ruta_directorio" name="ruta_directorio" value="/documentos/empresa">
+            </div>
+
+            <div class="form-group">
+                <label for="descripcion_repositorio">Descripción del Repositorio</label>
+                <textarea id="descripcion_repositorio" name="descripcion_repositorio" rows="3"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="modelo_llm">Modelo LLM (simulado)</label>
+                <input type="text" id="modelo_llm" name="modelo_llm" value="llama3">
+            </div>
+
+            <div class="form-group">
+                <label for="contexto_modelo_llm">Contexto para el Modelo LLM</label>
+                <textarea id="contexto_modelo_llm" name="contexto_modelo_llm" rows="3" placeholder="Ej: Eres un asistente experto en análisis de documentos..."></textarea>
+            </div>
+
+            <button type="submit">Guardar Configuración</button>
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.getElementById('config-form');
+
+            // Cargar configuración guardada
+            const savedConfig = JSON.parse(localStorage.getItem('appConfig'));
+            if (savedConfig) {
+                document.getElementById('nombre_compania').value = savedConfig.nombre_compania || '';
+                document.getElementById('departamento').value = savedConfig.departamento || '';
+                document.getElementById('ruta_directorio').value = savedConfig.ruta_directorio || '/documentos/empresa';
+                document.getElementById('descripcion_repositorio').value = savedConfig.descripcion_repositorio || '';
+                document.getElementById('modelo_llm').value = savedConfig.modelo_llm || 'llama3';
+                document.getElementById('contexto_modelo_llm').value = savedConfig.contexto_modelo_llm || '';
+            }
+
+            // Guardar configuración
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const formData = new FormData(form);
+                const config = Object.fromEntries(formData.entries());
+                localStorage.setItem('appConfig', JSON.stringify(config));
+                alert('Configuración guardada. Redirigiendo a la página principal...');
+                window.location.href = 'chat.html';
+            });
+        });
+    </script>
+</body>
+</html>

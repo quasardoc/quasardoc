@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="logonegro.png">
+    <title>Wyllou - Demo</title>
+    <link rel="stylesheet" href="static/css/style.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body>
+    <div id="app-container">
+        <!-- Panel de Configuración Lateral -->
+        <aside id="settings-panel">
+            <div class="panel-header">
+                <h2>Configuración</h2>
+                <button id="close-settings" class="close-btn">&times;</button>
+            </div>
+            <div class="panel-content">
+                <div class="form-group">
+                    <label for="tipo-busqueda">Modo de Búsqueda</label>
+                    <select id="tipo-busqueda">
+                        <option value="rapida">Rápida</option>
+                        <option value="detallada" selected>Detallada</option>
+                    </select>
+                </div>
+                <div class="switch-group">
+                    <label for="usar-prompt-inteligente">Usar Prompt Inteligente</label>
+                    <label class="switch">
+                        <input type="checkbox" id="usar-prompt-inteligente" checked>
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+                <div class="switch-group">
+                    <label for="mostrar-proceso">Mostrar Proceso Detallado</label>
+                    <label class="switch">
+                        <input type="checkbox" id="mostrar-proceso" checked>
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+                <a href="configuracion.html" class="reconfig-btn">Configuración (Demo)</a>
+            </div>
+        </aside>
+        
+        <!-- Área de Chat Principal -->
+        <main id="chat-area">
+            <header>
+                <button id="open-settings" class="material-icons">menu</button>
+                <h1>Wyllou Demo</h1>
+            </header>
+            <div id="chat-window">
+                <div class="message bot-message">
+                    <div class="content">
+                        Hola, soy tu asistente de búsqueda. Para comenzar, escribe tu consulta en el cuadro de abajo.
+                    </div>
+                </div>
+            </div>
+            <footer>
+                <div id="input-container">
+                    <textarea id="user-input" placeholder="Escribe tu pregunta..." rows="1"></textarea>
+                    <button id="send-button" class="material-icons">send</button>
+                </div>
+            </footer>
+        </main>
+    </div>
+
+    <script src="static/js/script.js"></script>
+</body>
+</html>

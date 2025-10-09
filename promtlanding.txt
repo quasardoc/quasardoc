@@ -1,0 +1,67 @@
+Persona: Actúa como un estratega de marketing y redactor publicitario (copywriter) de élite, especializado en soluciones de software B2B 
+que resuelven problemas complejos de gestión de datos. Tu tono debe ser directo, empático con el problema del cliente y contundente 
+al presentar la solución.
+
+Objetivo: Generar el contenido completo para una landing page de alto impacto para Wyllou. La página debe conectar inmediatamente 
+con el problema de la sobrecarga de documentos y posicionar a Wyllou como la única solución lógica y eficaz. El objetivo final es 
+que los visitantes, sintiéndose comprendidos, soliciten una demostración. Debe basarce en cuantoa disño y estructura a 
+
+Información Clave del Producto: Wyllou
+
+Concepto Principal: Wyllou es un motor de búsqueda inteligente que se conecta a la totalidad del conocimiento de una empresa (documentos físicos digitalizados y archivos digitales) y lo transforma en una base de datos conversacional. Permite a los empleados obtener respuestas precisas y verificables en segundos, en lugar de buscar manualmente en directorios o archivos físicos.
+
+Público Objetivo: Empresas medianas y grandes con una vasta y creciente cantidad de documentación. Directores de TI, Jefes de Operaciones, Gerentes de Departamentos (Legal, Ingeniería, RRHH) que sufren diariamente la ineficiencia de no poder encontrar información crítica rápidamente.
+
+El "Dolor" a Atacar (Punto Central del Mensaje): La empresa posee un tesoro de información acumulado durante años, pero es funcionalmente inútil porque está enterrado. Millones de documentos en servidores, carpetas anidadas, y archivadores físicos hacen que encontrar un dato específico sea una tarea titánica, manual y, a menudo, infructuosa. Es como tener una biblioteca gigante sin un bibliotecario o un catálogo.
+
+Características Clave (traducir a beneficios directos sobre este "dolor"):
+
+Procesamiento Masivo y Universal: Ingiere todos los formatos (.pdf, .docx, etc.), incluyendo PDFs escaneados de documentos físicos.
+Beneficio: "Desde el contrato firmado en 1995 hasta el email de ayer. Wyllou lo lee y lo entiende todo."
+Búsqueda Semántica y Conversacional: Entiende la intención de la pregunta, no solo palabras clave.
+Beneficio: "Pregúntale '¿cuál fue el margen de beneficio del proyecto X en 2022?' en lugar de buscar 'informe proyecto X 2022'."
+Generación de Respuestas Aumentada (RAG) con Citaciones: Crea una respuesta clara y cita la fuente exacta.
+Beneficio: "No más listas de 100 archivos. Obtén la respuesta directa, con el párrafo y la página del documento original para una verificación instantánea."
+Privacidad y Seguridad (On-Premise): Se instala en la infraestructura del cliente.
+Beneficio: "Todo el poder de la IA, pero tus documentos y tu conocimiento nunca abandonan tu red. Seguridad y control absolutos."
+Estructura de la Landing Page (Genera el contenido para cada sección con este nuevo enfoque):
+
+Sección de Héroe (Hero Section) - Impacto Inmediato:
+
+Título Principal (Headline): Tu conocimiento está enterrado. Wyllou lo desentierra. (Alternativa: "Millones de documentos. Cero respuestas.")
+Subtítulo: Deja de perder horas buscando en carpetas, directorios y archivos físicos. Wyllou lee y entiende todo el conocimiento de tu empresa para darte respuestas instantáneas y precisas.
+Llamada a la Acción (CTA): Un botón principal: "Descubre Cómo" o "Ver la Solución".
+Sección del Problema ("El Costo Oculto del Caos Documental"):
+
+Título: ¿Te suena familiar?
+Contenido: Tu empresa ha generado décadas de conocimiento: contratos, informes técnicos, manuales de políticas, minutas de reunión... millones de documentos. Este activo, que debería ser tu mayor ventaja competitiva, se ha convertido en un laberinto digital y físico.
+Usa viñetas para describir el dolor:
+Horas perdidas: Empleados buscando en una red interminable de carpetas, subcarpetas y servidores.
+Conocimiento inaccesible: Información crítica de documentos físicos o escaneados que ningún buscador tradicional puede leer.
+Decisiones a ciegas: Riesgo de tomar decisiones basadas en información incompleta o desactualizada porque encontrar el documento correcto es imposible.
+Duplicación de trabajo: Equipos que recrean trabajo que ya se hizo, pero cuyo registro está perdido en el archivo.
+Sección de la Solución ("Presentando a Wyllou"):
+
+Título: Convierte tu Archivo en tu Mejor Experto.
+Contenido: Wyllou es la solución definitiva al caos documental. Ingerimos y comprendemos la totalidad de tu base de conocimiento, sin importar el volumen, el formato o si es un archivo digital o un PDF escaneado. Transformamos tu archivo, antes un laberinto, en una fuente de conocimiento viva y conversacional.
+Flujo simple en 3 pasos (con íconos):
+Conecta: Wyllou se integra con tus directorios y sistemas existentes.
+Pregunta: Tu equipo hace preguntas en lenguaje natural a través de una interfaz de chat simple.
+Encuentra: Wyllou entrega una respuesta precisa y sintetizada en segundos, citando las fuentes exactas.
+Sección de Beneficios Clave:
+
+Reutiliza las características traducidas a beneficios, pero siempre conectándolas con el problema inicial.
+Recupera Horas Productivas: "Reduce el tiempo de búsqueda de documentos de horas a segundos."
+Desbloquea Todo tu Conocimiento: "Haz que hasta el último PDF escaneado sea tan consultable como una base de datos."
+Toma Decisiones Basadas en Datos: "Accede a la información correcta en el momento preciso para tomar decisiones más inteligentes y rápidas."
+Seguridad Inquebrantable: "Implementa la IA más potente con la tranquilidad de que tus datos nunca salen de tu control."
+Sección de Casos de Uso (mantener la estructura anterior).
+
+Sección de Testimonios (Ficticios) - Enfocados en el problema:
+
+"Antes de Wyllou, encontrar un dato en nuestros archivos de proyectos era una tarea de medio día. Ahora, es una pregunta de 10 segundos. Ha cambiado las reglas del juego para nuestra eficiencia." - Gerente de Proyectos.
+Sección de Llamada a la Acción Final (Final CTA):
+
+Título: Deja de Buscar. Empieza a Encontrar.
+Párrafo: ¿Estás listo para transformar tu caótico archivo en el activo más poderoso de tu empresa? Descubre cómo Wyllou puede ahorrarte miles de horas y desbloquear el verdadero valor de tu conocimiento.
+Botón/Formulario: "Solicitar una Demo Personalizada".
