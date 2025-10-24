@@ -468,3 +468,37 @@ footer {
 .source-link:hover {
     text-decoration: underline; /* Subrayado al pasar el ratón */
 }
+
+/* --- Estilos para el Informe Generado --- */
+.report-content {
+    margin-top: 1rem;
+    padding: 1rem;
+    background-color: var(--input-bg);
+    border-radius: 8px;
+    border: 1px solid #444;
+    font-family: 'Courier New', Courier, monospace;
+    white-space: pre-wrap; /* Mantiene los saltos de línea y espacios */
+    word-wrap: break-word;
+}
+
+.report-content br {
+    content: "";
+    display: block;
+    margin-bottom: 0.5em; /* Espacio entre líneas para simular el <pre> */
+}
+
+.bot-message .content h3 {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+    color: var(--accent-primary);
+}
+
+/* --- Estilos para el Gráfico en el Chat --- */
+.chat-chart-container {
+    margin-top: 1rem;
+    padding: 1rem;
+    background-color: var(--input-bg);
+    border-radius: 8px;
+    border: 1px solid #444;
+    max-width: 100%;
+}

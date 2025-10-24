@@ -139,6 +139,12 @@ document.addEventListener('DOMContentLoaded', function() {
             } else {
                 alert('El contenido de este archivo virtual no fue encontrado.');
             }
+        } else if (target.matches('#generate-report')) {
+            var answerContent = decodeURIComponent(target.dataset.answer);
+            appendMessage('Generar informe de la respuesta', 'user-message');
+            conversationState.stage = 'generate_report';
+            // Llamamos a una nueva función para manejar la generación del informe
+            generateSimulatedReport(answerContent);
         }
     });
 
@@ -503,7 +509,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 break;
 
             case 'final_answer':
-                content = response.data.replace(/\n/g, '<br>');
+                var finalAnswerText = response.data;
+                content = finalAnswerText.replace(/\n/g, '<br>');
                 if (document.getElementById('mostrar-proceso').checked && response.intermediate_steps && response.intermediate_steps.length > 0) {
                     var processHtml = '<br><br><h4>Proceso Detallado:</h4><ul class="process-list">';
                     response.intermediate_steps.forEach(function(step) {
@@ -517,6 +524,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
                 content += '<div class="follow-up-options">' +
                            '<button id="follow-up-question" class="btn-secondary">Preguntar sobre este contexto</button>' +
+                           '<button id="generate-report" class="btn-secondary" data-answer="' + encodeURIComponent(finalAnswerText) + '">Generar Informe</button>' +
                            '<button id="new-query" class="btn-secondary">Hacer una nueva consulta</button>' +
                            '</div>';
                 break;
@@ -644,5 +652,95 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Llamar a la API real de Gemini
         return await callGeminiAPI(prompt);
+    }
+
+    /**
+     * Renderiza un gráfico en un elemento canvas dentro del chat.
+     * @param {string} canvasId El ID del elemento <canvas>.
+     * @param {object} chartConfig La configuración del gráfico para Chart.js.
+     */
+    function renderChartInChat(canvasId, chartConfig) {
+        // Pequeño retraso para asegurar que el DOM se haya actualizado.
+        setTimeout(() => {
+            const ctx = document.getElementById(canvasId);
+            if (ctx) {
+                // Añadimos opciones por defecto para que los gráficos se vean bien en el tema oscuro.
+                const defaultConfig = {
+                    options: { plugins: { legend: { labels: { color: 'white' } } }, scales: { x: { ticks: { color: 'white' }, grid: { color: 'rgba(255, 255, 255, 0.1)' } }, y: { ticks: { color: 'white' }, grid: { color: 'rgba(255, 255, 255, 0.1)' } } } }
+                };
+                // Fusionamos la configuración por defecto con la recibida de Gemini.
+                const finalConfig = { ...chartConfig, options: { ...defaultConfig.options, ...chartConfig.options } };
+                new Chart(ctx.getContext('2d'), finalConfig);
+            }
+        }, 100);
+    }
+    /**
+     * Usa Gemini para generar un informe simulado basado en una respuesta.
+     * @param {string} answerText El texto de la respuesta final.
+     */
+    async function generateSimulatedReport(answerText) {
+        startLiveTimer();
+
+        const prompt = `
+        **Tarea:**
+        Actúa como un analista de datos. Tu objetivo es generar un informe en formato Markdown basado en el texto proporcionado. Si es posible, genera también la configuración para un gráfico.
+
+        **Instrucciones:**
+        1.  Analiza el siguiente texto.
+        2.  Si el texto contiene datos numéricos, financieros o comparativos, genera una **tabla en formato Markdown** que resuma esos datos.
+        3.  Si el texto es principalmente descriptivo o conceptual, crea un **resumen ejecutivo** con 3-4 puntos clave (bullet points).
+        4.  **Generación de Gráfico (MUY IMPORTANTE):** Si los datos se pueden visualizar (comparaciones, tendencias, proporciones), genera un bloque de código JSON para Chart.js.
+            - El JSON debe estar envuelto en un bloque especial: \`[CHART_JSON]...[/CHART_JSON]\`.
+            - El JSON debe contener las claves: \`type\` (ej. 'bar', 'line', 'pie'), y \`data\` (con \`labels\` y \`datasets\`).
+            - Ejemplo de bloque JSON:
+              \`\`\`
+              [CHART_JSON]
+              {
+                "type": "bar",
+                "data": {
+                  "labels": ["Q1", "Q2", "Q3"],
+                  "datasets": [{
+                    "label": "Ingresos (en millones)",
+                    "data": [10, 15, 12],
+                    "backgroundColor": ["#889AFF", "#5767D9", "#3E4EAD"]
+                  }]
+                }
+              }
+              [/CHART_JSON]
+              \`\`\`
+        5.  El informe debe ser conciso y claro. Primero el texto/tabla en Markdown, y luego, si aplica, el bloque JSON del gráfico.
+
+        **Texto a analizar:**\n---\n${answerText}\n---\n\n**Informe Generado:**
+        `;
+
+        try {
+            const reportMarkdown = await callGeminiAPI(prompt);
+            // Usaremos una librería externa o una función para convertir Markdown a HTML si es necesario,
+            // pero por ahora, el navegador puede renderizar <pre> para mantener el formato.
+            // Para una mejor visualización de tablas, se necesitarían estilos CSS.
+            let reportHtml = '<h3>Informe Generado</h3>';
+            let textPart = reportMarkdown;
+            let chartConfig = null;
+
+            const chartJsonRegex = /\[CHART_JSON\]([\s\S]*?)\[\/CHART_JSON\]/;
+            const match = reportMarkdown.match(chartJsonRegex);
+
+            if (match && match[1]) {
+                try {
+                    chartConfig = JSON.parse(match[1].trim());
+                    textPart = reportMarkdown.replace(chartJsonRegex, '').trim(); // Quita el JSON del texto
+                    const canvasId = 'chart-' + Date.now();
+                    reportHtml += `<div class="chat-chart-container"><canvas id="${canvasId}"></canvas></div>`;
+                    renderChartInChat(canvasId, chartConfig);
+                } catch (e) { console.error("Error al parsear el JSON del gráfico:", e); }
+            }
+            reportHtml += '<div class="report-content">' + textPart.replace(/\|/g, ' | ').replace(/\n/g, '<br>') + '</div>';
+            stopLiveTimer();
+            updateLastBotMessage(reportHtml);
+        } catch (error) {
+            console.error("Error al generar el informe simulado:", error);
+            stopLiveTimer();
+            updateLastBotMessage("Lo siento, ocurrió un error al intentar generar el informe.");
+        }
     }
 });

@@ -82,6 +82,29 @@ body {
     color: var(--primary-accent);
 }
 
+/* --- Language Switcher --- */
+.language-switcher {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-left: 2rem;
+}
+
+.language-switcher a {
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 0.9rem;
+    padding: 0.2rem 0.4rem;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+.lang-active { color: var(--bg-dark); background-color: var(--primary-accent); }
+.lang-inactive { color: var(--text-medium); background-color: transparent; }
+.lang-inactive:hover { color: var(--text-light); background-color: var(--bg-light); }
+.language-switcher span {
+    color: var(--border-color);
+}
+
 .cta-button {
     background-color: var(--primary-accent);
     color: var(--text-dark);
@@ -318,11 +341,61 @@ section {
     transition: max-height 0.4s ease-out;
 }
 
+.accordion-item.active .accordion-content {
+    padding: 0 1.5rem 1.5rem; /* Padding para alinear el contenido */
+}
+
 .accordion-content p {
     padding: 0 1.5rem 1.5rem;
     color: var(--text-medium);
 }
 
+/* --- Estilos para la lista de ideas dentro del acordeón --- */
+.ideas-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem; /* Espacio entre ideas */
+}
+
+.idea-item {
+    padding-bottom: 1.5rem; /* Espacio para la línea separadora */
+    border-bottom: 1px solid var(--border-color); /* Línea separadora */
+}
+
+.idea-item:last-child {
+    border-bottom: none; /* Elimina la línea en el último elemento */
+    padding-bottom: 0;
+}
+
+.idea-item h4 {
+    margin-bottom: 0.5rem;
+}
+
+.idea-item p {
+    text-align: justify;
+}
+
+/* --- Estilos para el párrafo inspirador al final de la sección --- */
+.inspiring-paragraph {
+    margin-top: 4rem; /* Espacio aumentado sobre el párrafo */
+    padding: 3rem; /* Relleno aumentado */
+    background-color: var(--bg-light); /* Fondo para tema oscuro */
+    border-radius: 12px; /* Radio de borde ligeramente mayor */
+    text-align: center;
+    font-size: 1.5rem; /* Tamaño de fuente más grande */
+    line-height: 1.8;
+    color: var(--text-light); /* Texto claro para fondo oscuro */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4); /* Sombra más pronunciada para énfasis */
+    max-width: 900px; /* Ancho máximo para coincidir con el contenido principal */
+    margin-left: auto;
+    margin-right: auto;
+    border: 1px solid var(--border-color); /* Borde sutil */
+}
+
+.inspiring-paragraph p {
+    margin: 0; /* Elimina los márgenes predeterminados del párrafo */
+    font-weight: 600; /* Hace el texto un poco más audaz */
+}
 /* --- Process Section --- */
 .process-section { text-align: left; }
 .process-steps {
