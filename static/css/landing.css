@@ -524,15 +524,9 @@ cite { color: var(--text-medium); }
     .hero {
         grid-template-columns: 1fr;
         text-align: center;
-        min-height: auto; /* Permite que la altura se ajuste al contenido */
     }
     .hero-animation-container { grid-row: 1; margin-bottom: 2rem; }
     .hero-title { font-size: 2.5rem; }
-    
-    /* Ajuste para la simulación de chat en móviles */
-    .chat-message {
-        white-space: normal; /* Permite que el texto se divida en varias líneas */
-    }
 
     .section-title { font-size: 2rem; }
     .benefits-grid { grid-template-columns: 1fr; }
