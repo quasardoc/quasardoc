@@ -1,47 +1,44 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wyllou - Pitch Deck (Ronda Seed)</title>
-    <!-- Restoring direct, non-bracketed URLs for Tailwind CSS and Inter font -->
+    <title>Wyllou - Pitch Deck (Landing Scrollable)</title>
+    <!-- Incluyendo Tailwind CSS y la fuente Inter -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
     <style>
         :root {
-            /* Vibrant Green Palette */
-            --wyllou-green-dark: #225C22; /* Deep, rich green */
-            --wyllou-green-accent: #4CAF50; /* Vibrant green for highlights */
-            --wyllou-green-light: #E8F5E9; /* Very light green for subtle backgrounds */
-            --wyllou-text: #1F2937; /* Dark Grey for body text */
+            /* Paleta de Colores Wyllou */
+            --wyllou-green-dark: #225C22; /* Verde profundo para encabezados */
+            --wyllou-green-accent: #4CAF50; /* Verde vibrante para acentos */
+            --wyllou-green-light: #E8F5E9; /* Verde muy claro para fondos sutiles */
+            --wyllou-text: #1F2937; /* Texto principal */
             --wyllou-bg-light: #F9FAFB;
         }
         body {
             font-family: 'Inter', sans-serif;
             background-color: var(--wyllou-bg-light);
-            /* Important for full-screen slides and responsiveness */
             margin: 0;
             padding: 0;
-            overflow: hidden; 
+            overflow-x: hidden; /* Previene scroll horizontal */
         }
-        .slide {
-            width: 100vw;
-            height: 100vh;
-            display: none;
+        .pitch-section {
+            /* Mínimo de altura para impacto visual, pero permitiendo el scroll */
+            min-height: 100vh;
+            display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            /* Adjust padding for mobile/tablet */
-            padding: 2rem 1rem; /* Reduced padding on all sides */
+            padding: 5rem 1rem;
             box-sizing: border-box;
             background-color: white;
-            transition: opacity 0.5s ease-in-out;
-            text-align: center; /* Center content on smaller screens */
+            border-bottom: 1px solid #E5E7EB; /* Separador sutil entre secciones */
         }
-        .slide.active {
-            display: flex;
+        /* Color de fondo alterno para algunas secciones (opcional) */
+        .pitch-section:nth-child(even) {
+            background-color: var(--wyllou-bg-light);
         }
-        /* Custom styles for the demo slide simulation */
         .demo-card {
             border: 1px solid #E5E7EB;
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
@@ -52,29 +49,55 @@
             border: 1px solid var(--wyllou-green-accent);
             font-size: 0.75rem;
         }
-
-        /* Ensure content in flex/grid scales down */
-        .slide h2 {
-            font-size: 2.25rem; /* Default for mobile/tablet (sm:text-4xl, md:text-5xl, lg:text-6xl) */
+        /* Estilos para el menú móvil */
+        #mobile-menu {
+            transition: transform 0.3s ease-in-out;
         }
     </style>
 </head>
 <body>
 
-    <!-- Logo and Navigation Indicator (Fixed Header) -->
-    <header class="fixed top-0 left-0 right-0 p-4 bg-white z-50 flex justify-between items-center border-b border-gray-100">
-        <div class="flex items-center space-x-2">
-            <!-- Wyllou Logo - CORRECTED with the provided image ID -->
-            <img src="uploaded:logosinfondo.png-d3113754-58f6-4d26-9aba-8744e86c97db" alt="Wyllou Logo" class="w-8 h-8"/>
-            <span class="text-xl font-bold text-gray-900">Wyllou</span>
+    <!-- Header Fijo (Barra de Navegación Simple) -->
+    <header class="sticky top-0 left-0 right-0 bg-white/90 backdrop-blur-sm z-50 border-b border-gray-200 shadow-sm">
+        <nav class="container mx-auto px-4 lg:px-6 py-3 flex justify-between items-center">
+            <a href="#vision" class="flex items-center space-x-2">
+                <img src="logosinfondo.png" alt="Wyllou Logo" class="w-8 h-8"/>
+                <span class="text-2xl font-extrabold" style="color: var(--wyllou-green-dark);">Wyllou</span>
+            </a>
+            <!-- Menú para Escritorio -->
+            <div class="hidden lg:flex items-center space-x-6">
+                <a href="#problema" class="text-gray-600 hover:text-green-600 font-semibold">Problema</a>
+                <a href="#solucion" class="text-gray-600 hover:text-green-600 font-semibold">Solución</a>
+                <a href="#demo" class="text-gray-600 hover:text-green-600 font-semibold">Demo</a>
+                <a href="#mercado" class="text-gray-600 hover:text-green-600 font-semibold">Mercado</a>
+                <a href="#negocio" class="text-gray-600 hover:text-green-600 font-semibold">Negocio</a>
+                <a href="#equipo" class="text-gray-600 hover:text-green-600 font-semibold">Equipo</a>
+                <a href="#inversion" class="text-white font-bold py-2 px-4 rounded-full shadow-lg transition duration-300" style="background-color: var(--wyllou-green-accent);">Inversión</a>
+            </div>
+            <!-- Botón de Menú Móvil -->
+            <div class="lg:hidden flex-grow text-right">
+                <button id="menu-btn" class="text-gray-800 focus:outline-none">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                </button>
+            </div>
+        </nav>
+        <!-- Menú Móvil Desplegable -->
+        <div id="mobile-menu" class="lg:hidden hidden flex-col items-center space-y-4 py-4 bg-white border-t border-gray-200">
+            <a href="#problema" class="block text-gray-800 hover:text-green-600 font-semibold">Problema</a>
+            <a href="#solucion" class="block text-gray-800 hover:text-green-600 font-semibold">Solución</a>
+            <a href="#demo" class="block text-gray-800 hover:text-green-600 font-semibold">Demo</a>
+            <a href="#mercado" class="block text-gray-800 hover:text-green-600 font-semibold">Mercado</a>
+            <a href="#negocio" class="block text-gray-800 hover:text-green-600 font-semibold">Negocio</a>
+            <a href="#equipo" class="block text-gray-800 hover:text-green-600 font-semibold">Equipo</a>
+            <a href="#inversion" class="block text-gray-800 hover:text-green-600 font-semibold">Inversión</a>
         </div>
-        <div id="pagination" class="text-gray-500 font-medium"></div>
     </header>
 
-    <!-- SLIDE 1: TITLE & VISION -->
-    <section class="slide active" data-slide="1">
-        <div class="text-center max-w-4xl">
-            <!-- Responsive Text Size: large on desktop, smaller on mobile -->
+    <!-- --------------------------------- -->
+    <!-- SECCIÓN 1: TITLE & VISION (El Hook) -->
+    <!-- --------------------------------- -->
+    <section id="vision" class="pitch-section bg-white">
+        <div class="text-center max-w-4xl px-4">
             <h1 class="text-5xl md:text-7xl font-extrabold mb-8" style="color: var(--wyllou-green-dark);">
                 Wyllou: <br>
                 <span style="color: var(--wyllou-green-accent);">La Infraestructura de la Confianza.</span>
@@ -82,70 +105,76 @@
             <h2 class="text-xl md:text-3xl font-light text-gray-600 mb-10">
                 Organizar todo el conocimiento experto de la humanidad y hacerlo universalmente accesible y útil.
             </h2>
-            <div class="inline-block px-6 py-3 md:px-8 md:py-3 rounded-full text-white font-bold text-lg md:text-2xl" style="background-color: var(--wyllou-green-accent);">
-                Ronda Seed | Inversión Solicitada: $500K USD
+            <div class="inline-block px-6 py-3 md:px-8 md:py-3 rounded-full text-white font-bold text-lg md:text-2xl shadow-xl hover:shadow-2xl transition duration-300" style="background-color: var(--wyllou-green-accent);">
+                Ronda Seed | Solicitud: $500K USD
             </div>
         </div>
     </section>
 
-    <!-- SLIDE 2: PROBLEM -->
-    <section class="slide" data-slide="2">
-        <div class="text-center max-w-4xl">
+    <!-- --------------------------------- -->
+    <!-- SECCIÓN 2: PROBLEM (El Dolor) -->
+    <!-- --------------------------------- -->
+    <section id="problema" class="pitch-section" style="background-color: var(--wyllou-bg-light);">
+        <div class="text-center max-w-5xl px-4">
             <p class="text-sm font-semibold uppercase tracking-widest mb-4" style="color: var(--wyllou-green-accent);">PROBLEMA</p>
-            <h2 class="text-4xl md:text-6xl font-bold mb-8" style="color: var(--wyllou-green-dark);">
+            <h2 class="text-4xl md:text-6xl font-bold mb-12" style="color: var(--wyllou-green-dark);">
                 La Asimetría Fatal del Conocimiento.
             </h2>
-            <!-- Responsive Grid: 1 column on mobile, 3 columns on medium/large screens -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 text-left mt-10 md:mt-16">
-                <div class="p-4 md:p-6 rounded-lg shadow-md" style="background-color: var(--wyllou-green-light);">
-                    <p class="text-4xl md:text-5xl font-extrabold mb-2" style="color: var(--wyllou-green-accent);">90%</p>
-                    <p class="text-base md:text-lg font-medium text-gray-700">del conocimiento experto está en **Datos Oscuros** (PDFs, escaneos, archivos físicos) e inaccesible para la IA tradicional.</p>
+            <!-- Responsive Grid: 1 column on mobile, 3 columns on desktop -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-left">
+                <div class="p-6 rounded-xl shadow-lg border-t-4" style="border-color: var(--wyllou-green-accent); background-color: white;">
+                    <p class="text-5xl font-extrabold mb-2" style="color: var(--wyllou-green-dark);">90%</p>
+                    <p class="text-lg font-medium text-gray-700">del conocimiento experto está en **Datos Oscuros** (PDFs escaneados, archivos físicos) e inaccesible para la IA tradicional.</p>
                 </div>
-                <div class="p-4 md:p-6 rounded-lg shadow-md" style="background-color: var(--wyllou-green-light);">
-                    <p class="text-4xl md:text-5xl font-extrabold mb-2" style="color: var(--wyllou-green-accent);">99%</p>
-                    <p class="text-base md:text-lg font-medium text-gray-700">de la humanidad opera con **información incompleta** para tomar decisiones críticas (médicos, jueces, agricultores).</p>
+                <div class="p-6 rounded-xl shadow-lg border-t-4" style="border-color: var(--wyllou-green-accent); background-color: white;">
+                    <p class="text-5xl font-extrabold mb-2" style="color: var(--wyllou-green-dark);">99%</p>
+                    <p class="text-lg font-medium text-gray-700">de la humanidad opera con **información incompleta** para tomar decisiones críticas (médicos, jueces, agricultores).</p>
                 </div>
-                <div class="p-4 md:p-6 rounded-lg shadow-md" style="background-color: var(--wyllou-green-light);">
-                    <p class="text-4xl md:text-5xl font-extrabold mb-2" style="color: var(--wyllou-green-accent);">Trillones</p>
-                    <p class="text-base md:text-lg font-medium text-gray-700">de dólares perdidos anualmente en errores médicos, ineficiencia legal y diagnóstico tardío por falta de acceso al conocimiento.</p>
+                <div class="p-6 rounded-xl shadow-lg border-t-4" style="border-color: var(--wyllou-green-accent); background-color: white;">
+                    <p class="text-5xl font-extrabold mb-2" style="color: var(--wyllou-green-dark);">Trillones</p>
+                    <p class="text-lg font-medium text-gray-700">de dólares perdidos anualmente en errores médicos, ineficiencia legal y diagnóstico tardío por falta de acceso al conocimiento.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- SLIDE 3: SOLUTION -->
-    <section class="slide" data-slide="3">
-        <div class="text-center max-w-5xl">
+    <!-- --------------------------------- -->
+    <!-- SECCIÓN 3: SOLUTION (La Magia) -->
+    <!-- --------------------------------- -->
+    <section id="solucion" class="pitch-section bg-white">
+        <div class="text-center max-w-5xl px-4">
             <p class="text-sm font-semibold uppercase tracking-widest mb-4" style="color: var(--wyllou-green-accent);">SOLUCIÓN: WYLLOU</p>
-            <h2 class="text-4xl md:text-6xl font-bold mb-10 md:mb-16" style="color: var(--wyllou-green-dark);">
+            <h2 class="text-4xl md:text-6xl font-bold mb-16" style="color: var(--wyllou-green-dark);">
                 El Núcleo de Conocimiento (Knowledge Core).
             </h2>
-            <!-- Responsive Flex to Stacked Grid -->
-            <div class="flex flex-col md:flex-row justify-between items-start space-y-6 md:space-y-0 md:space-x-8">
-                <div class="flex-1 p-4 md:p-6 border-t-4 pt-4 md:pt-6 text-left rounded-lg w-full" style="border-color: var(--wyllou-green-accent);">
-                    <h3 class="text-xl md:text-2xl font-bold mb-3" style="color: var(--wyllou-green-dark);">1. INGESTA UNIVERSAL</h3>
-                    <p class="text-sm md:text-base text-gray-600">El Escáner de la Civilización: Extraemos datos de millones de **"Datos Oscuros"** (PDFs escaneados, informes técnicos en papel) que la competencia ignora.</p>
+            <!-- Responsive Grid: 1 column on mobile, 3 columns on desktop -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-left">
+                <div class="p-6 rounded-lg border-b-4 pb-6" style="border-color: var(--wyllou-green-dark);">
+                    <h3 class="text-2xl font-bold mb-3" style="color: var(--wyllou-green-dark);">1. INGESTA UNIVERSAL</h3>
+                    <p class="text-gray-600">El Escáner de la Civilización: Extraemos datos de millones de **"Datos Oscuros"** (PDFs escaneados, informes técnicos en papel) que la competencia ignora.</p>
                 </div>
-                <div class="flex-1 p-4 md:p-6 border-t-4 pt-4 md:pt-6 text-left rounded-lg w-full" style="border-color: var(--wyllou-green-accent);">
-                    <h3 class="text-xl md:text-2xl font-bold mb-3" style="color: var(--wyllou-green-dark);">2. INDEXACIÓN SEMÁNTICA (RAG)</h3>
-                    <p class="text-sm md:text-base text-gray-600">Transformamos el caos en una Base de la Verdad. Utilizando arquitectura RAG, garantizamos la recuperación del conocimiento más relevante y contextual, no solo el más frecuente.</p>
+                <div class="p-6 rounded-lg border-b-4 pb-6" style="border-color: var(--wyllou-green-dark);">
+                    <h3 class="text-2xl font-bold mb-3" style="color: var(--wyllou-green-dark);">2. INDEXACIÓN SEMÁNTICA (RAG)</h3>
+                    <p class="text-gray-600">Transformamos el caos en una Base de la Verdad. Utilizamos RAG, garantizando la recuperación del conocimiento más relevante y contextual.</p>
                 </div>
-                <div class="flex-1 p-4 md:p-6 border-t-4 pt-4 md:pt-6 text-left rounded-lg w-full" style="border-color: var(--wyllou-green-accent);">
-                    <h3 class="text-xl md:text-2xl font-bold mb-3" style="color: var(--wyllou-green-dark);">3. SÍNTESIS CONFIABLE</h3>
-                    <p class="text-sm md:text-base text-gray-600">**Cero Alucinaciones y Trazabilidad:** Cada frase generada está 100% vinculada y verificada contra el documento fuente original. Esto es una necesidad, no un lujo, en sectores regulados.</p>
+                <div class="p-6 rounded-lg border-b-4 pb-6" style="border-color: var(--wyllou-green-dark);">
+                    <h3 class="text-2xl font-bold mb-3" style="color: var(--wyllou-green-dark);">3. SÍNTESIS CONFIABLE</h3>
+                    <p class="text-gray-600">**Cero Alucinaciones y Trazabilidad:** Cada frase generada está 100% vinculada y verificada contra el documento fuente original.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- SLIDE 4: DEMO/PRODUCT APPLICATION -->
-    <section class="slide" data-slide="4">
-        <div class="text-center max-w-5xl w-full">
+    <!-- --------------------------------- -->
+    <!-- SECCIÓN 4: DEMO/PRODUCT APPLICATION (La Prueba) -->
+    <!-- --------------------------------- -->
+    <section id="demo" class="pitch-section" style="background-color: var(--wyllou-bg-light); padding-top: 10rem; padding-bottom: 10rem;">
+        <div class="text-center max-w-5xl w-full px-4">
             <p class="text-sm font-semibold uppercase tracking-widest mb-4" style="color: var(--wyllou-green-accent);">APLICACIÓN DE NIVEL CIVILIZATORIO</p>
-            <h2 class="text-4xl md:text-5xl font-bold mb-8 md:mb-12" style="color: var(--wyllou-green-dark);">
+            <h2 class="text-4xl md:text-5xl font-bold mb-12" style="color: var(--wyllou-green-dark);">
                 Demo: La Memoria Médica Universal.
             </h2>
-            <div class="demo-card rounded-xl p-6 md:p-8 bg-white text-left max-w-full">
+            <div class="demo-card rounded-xl p-6 md:p-8 bg-white text-left max-w-full mx-auto">
                 <p class="text-sm md:text-base text-gray-500 italic mb-4">Query de un Médico Rural (África/Asia):</p>
                 <div class="p-3 md:p-4 rounded-lg bg-gray-100 mb-6 text-sm md:text-base text-gray-800 font-medium">
                     "Diagnóstico diferencial para un niño con fiebre prolongada, hepatomegalia, y eosinofilia, sin historial de viaje reciente."
@@ -154,11 +183,11 @@
                 <div class="border-t pt-4">
                     <p class="text-base md:text-lg font-semibold mb-3" style="color: var(--wyllou-green-accent);">Respuesta del Experto de IA Wyllou:</p>
                     <p class="text-sm md:text-base text-gray-700 mb-4">
-                        La presentación clínica es atípica, requiriendo la consideración de síndromes poco frecuentes en zonas endémicas. La combinación de síntomas sugiere primariamente la **Histiocitosis de Células de Langerhans (LCH)**, debido a la tríada clásica, o una **Infección Parasitaria Oculta** no común.
+                        La combinación de síntomas sugiere primariamente la **Histiocitosis de Células de Langerhans (LCH)** o una **Infección Parasitaria Oculta** no común.
                         <span class="citation-tag inline-block ml-2 px-2 py-0.5 rounded-full font-semibold">Cita: Estudio Clínico NEJM 2024, p. 45</span>
                     </p>
                     <p class="text-sm md:text-base text-gray-700 mb-4">
-                        Secundariamente, debe descartarse la **Leishmaniasis Visceral** o la **Esquistosomiasis Ectópica**, incluso sin historial de viaje, debido al componente de eosinofilia y la hepatomegalia.
+                        Secundariamente, debe descartarse la **Leishmaniasis Visceral** o la **Esquistosomiasis Ectópica**, incluso sin historial de viaje.
                         <span class="citation-tag inline-block ml-2 px-2 py-0.5 rounded-full font-semibold">Cita: Manual de Patología Tropical, Cap. 3.2</span>
                     </p>
                     <p class="text-base md:text-xl font-bold mt-6" style="color: var(--wyllou-green-dark);">
@@ -169,27 +198,29 @@
         </div>
     </section>
 
-    <!-- SLIDE 5: MARKET SIZE & COMPETITION -->
-    <section class="slide" data-slide="5">
-        <div class="text-center max-w-5xl w-full">
+    <!-- --------------------------------- -->
+    <!-- SECCIÓN 5: MARKET SIZE & COMPETITION (La Oportunidad) -->
+    <!-- --------------------------------- -->
+    <section id="mercado" class="pitch-section bg-white">
+        <div class="text-center max-w-5xl w-full px-4">
             <p class="text-sm font-semibold uppercase tracking-widest mb-4" style="color: var(--wyllou-green-accent);">MERCADO & ESTRATEGIA</p>
-            <h2 class="text-4xl md:text-6xl font-bold mb-8" style="color: var(--wyllou-green-dark);">
+            <h2 class="text-4xl md:text-6xl font-bold mb-10" style="color: var(--wyllou-green-dark);">
                 La Oportunidad de Infraestructura de $2.3T.
             </h2>
-            <!-- Responsive Grid: 1 column on mobile, 2 columns on medium/large screens -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 mt-8 md:mt-12">
-                <div class="text-left p-6 rounded-xl shadow-md" style="background-color: var(--wyllou-green-light);">
+            <!-- Responsive Grid: 1 column on mobile, 2 columns on desktop -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12">
+                <div class="text-left p-6 rounded-xl shadow-lg border-l-4" style="border-color: var(--wyllou-green-dark); background-color: var(--wyllou-green-light);">
                     <h3 class="text-2xl md:text-3xl font-extrabold mb-4" style="color: var(--wyllou-green-accent);">Total Addressable Market (TAM)</h3>
-                    <ul class="space-y-3 text-base md:text-lg font-medium text-gray-700">
+                    <ul class="space-y-3 text-lg font-medium text-gray-700">
                         <li>— Salud Digital Global: <span class="font-bold">$1.5 Trillones (2030)</span></li>
                         <li>— EdTech Global: <span class="font-bold">$600 Billones (2028)</span></li>
                         <li>— LegalTech + ClimateTech: <span class="font-bold">$280 Billones (2030)</span></li>
                     </ul>
-                    <p class="text-base md:text-xl font-bold mt-4" style="color: var(--wyllou-green-dark);">No buscamos una fracción. Buscamos ser la capa de inteligencia fundamental.</p>
+                    <p class="text-xl font-bold mt-6" style="color: var(--wyllou-green-dark);">No buscamos una fracción. Buscamos ser la capa de inteligencia fundamental.</p>
                 </div>
-                <div class="text-left p-6 rounded-xl shadow-md" style="background-color: var(--wyllou-green-light);">
+                <div class="text-left p-6 rounded-xl shadow-lg border-l-4" style="border-color: var(--wyllou-green-dark); background-color: var(--wyllou-green-light);">
                     <h3 class="text-2xl md:text-3xl font-extrabold mb-4" style="color: var(--wyllou-green-accent);">Nuestra Ventaja (The Moat)</h3>
-                    <ol class="space-y-3 text-base md:text-lg font-medium text-gray-700">
+                    <ol class="space-y-3 text-lg font-medium text-gray-700">
                         <li>**1. Foso de Datos Oscuros:** Tecnología central para ingestar el 90% del conocimiento que Google ignora.</li>
                         <li>**2. Foso de Confianza:** Cero Alucinaciones + Trazabilidad. Único camino para la adopción en Medicina/Derecho.</li>
                         <li>**3. Foso Federado:** Modelo On-Premise. Respetamos la soberanía de los datos de gobiernos y hospitales.</li>
@@ -199,16 +230,18 @@
         </div>
     </section>
 
-    <!-- SLIDE 6: BUSINESS MODEL & FINANCIALS -->
-    <section class="slide" data-slide="6">
-        <div class="text-center max-w-5xl w-full">
+    <!-- --------------------------------- -->
+    <!-- SECCIÓN 6: BUSINESS MODEL & FINANCIALS (El Dinero) -->
+    <!-- --------------------------------- -->
+    <section id="negocio" class="pitch-section" style="background-color: var(--wyllou-bg-light); padding-top: 10rem; padding-bottom: 10rem;">
+        <div class="text-center max-w-5xl w-full px-4">
             <p class="text-sm font-semibold uppercase tracking-widest mb-4" style="color: var(--wyllou-green-accent);">NEGOCIO</p>
-            <h2 class="text-4xl md:text-6xl font-bold mb-10 md:mb-12" style="color: var(--wyllou-green-dark);">
+            <h2 class="text-4xl md:text-6xl font-bold mb-12" style="color: var(--wyllou-green-dark);">
                 Modelo "Robin Hood": Rentabilidad y Expansión.
             </h2>
              <!-- Responsive Flex to Stacked Grid -->
-            <div class="flex flex-col md:flex-row justify-around items-stretch space-y-6 md:space-y-0 md:space-x-8">
-                <div class="flex-1 p-6 rounded-xl border-l-4 border-green-600 text-left shadow-lg" style="background-color: #D4EDDA;">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+                <div class="p-6 rounded-xl border-l-8 border-green-700 text-left shadow-2xl" style="background-color: #D4EDDA;">
                     <h3 class="text-xl md:text-3xl font-bold mb-3" style="color: #155724;">MOTOR DE INGRESOS (B2G/B2B)</h3>
                     <ul class="text-sm md:text-base text-gray-700 space-y-2">
                         <li>**Clientes:** Ministerios de Salud, Farmacéuticas, Aseguradoras.</li>
@@ -216,18 +249,18 @@
                         <li>**Margen Bruto Proyectado:** 90-95% (Modelo SaaS/Licencia).</li>
                     </ul>
                 </div>
-                <div class="flex-1 p-6 rounded-xl border-l-4 border-green-600 text-left shadow-lg" style="background-color: #D4EDDA;">
+                <div class="p-6 rounded-xl border-l-8 border-green-700 text-left shadow-2xl" style="background-color: #D4EDDA;">
                     <h3 class="text-xl md:text-3xl font-bold mb-3" style="color: #155724;">IMPACTO & VIRALIDAD (B2P)</h3>
                     <ul class="text-sm md:text-base text-gray-700 space-y-2">
                         <li>**Usuarios:** Médicos rurales, Estudiantes, Ciudadanos.</li>
-                        <li>**Modelo:** Acceso Gratuito (Ej. Universidad Sin Muros, Justicia Global).</li>
+                        <li>**Modelo:** Acceso Gratuito (Universidad Sin Muros, Justicia Global).</li>
                         <li>**Resultado:** Crecimiento Orgánico Masivo (CAC B2P ≈ $0).</li>
                     </ul>
                 </div>
             </div>
-            <div class="mt-8 md:mt-12 p-6 bg-white rounded-xl shadow-xl border-t border-gray-100">
-                 <!-- Financial Stats as responsive grid -->
-                <div class="grid grid-cols-3 gap-4">
+            <!-- Metrics Bar -->
+            <div class="p-6 bg-white rounded-xl shadow-xl border-t border-gray-100">
+                 <div class="grid grid-cols-3 gap-4">
                     <div class="text-center">
                         <p class="text-3xl md:text-4xl font-extrabold" style="color: var(--wyllou-green-dark);">$15M</p>
                         <p class="text-xs md:text-lg font-medium text-gray-600">LTV por Cliente (10 años)</p>
@@ -245,131 +278,86 @@
         </div>
     </section>
 
-    <!-- SLIDE 7: GO-TO-MARKET & TEAM -->
-    <section class="slide" data-slide="7">
-        <div class="text-center max-w-5xl w-full">
+    <!-- --------------------------------- -->
+    <!-- SECCIÓN 7: GO-TO-MARKET & TEAM (El Roadmap) -->
+    <!-- --------------------------------- -->
+    <section id="equipo" class="pitch-section bg-white">
+        <div class="text-center max-w-5xl w-full px-4">
             <p class="text-sm font-semibold uppercase tracking-widest mb-4" style="color: var(--wyllou-green-accent);">EQUIPO & EJECUCIÓN</p>
-            <h2 class="text-4xl md:text-6xl font-bold mb-10 md:mb-12" style="color: var(--wyllou-green-dark);">
+            <h2 class="text-4xl md:text-6xl font-bold mb-12" style="color: var(--wyllou-green-dark);">
                 Estrategia del Caballo de Troya (6-12 Meses).
             </h2>
-            <!-- Responsive Grid: 2 columns on mobile, 4 columns on large screens -->
-            <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 items-start">
-                <div class="p-4 rounded-lg shadow-md" style="background-color: var(--wyllou-green-light);">
-                    <p class="text-lg md:text-xl font-bold mb-1" style="color: var(--wyllou-green-accent);">Mes 1-2</p>
-                    <p class="text-xs md:text-sm text-gray-700 font-semibold">Foco Vertical</p>
+            <!-- Responsive Timeline Grid: 2 columns on mobile, 4 columns on desktop -->
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8 items-start">
+                <div class="p-4 rounded-lg shadow-md border-t-4 pt-4" style="border-color: var(--wyllou-green-accent); background-color: var(--wyllou-green-light);">
+                    <p class="text-xl font-bold mb-1" style="color: var(--wyllou-green-dark);">Mes 1-2</p>
+                    <p class="text-sm text-gray-700 font-semibold">Foco Vertical</p>
                     <p class="text-xs md:text-sm text-gray-600">Perfeccionar y lanzar **Memoria Médica Universal** (Vertical #1: Urgencia y Valor).</p>
                 </div>
-                <div class="p-4 rounded-lg shadow-md" style="background-color: var(--wyllou-green-light);">
-                    <p class="text-lg md:text-xl font-bold mb-1" style="color: var(--wyllou-green-accent);">Mes 3-4</p>
-                    <p class="text-xs md:text-sm text-gray-700 font-semibold">Alianza Estratégica</p>
+                <div class="p-4 rounded-lg shadow-md border-t-4 pt-4" style="border-color: var(--wyllou-green-accent); background-color: var(--wyllou-green-light);">
+                    <p class="text-xl font-bold mb-1" style="color: var(--wyllou-green-dark);">Mes 3-4</p>
+                    <p class="text-sm text-gray-700 font-semibold">Alianza Estratégica</p>
                     <p class="text-xs md:text-sm text-gray-600">Asegurar socio de prestigio (Ej. OMS, NIH) para PoC (Prueba de Concepto) On-Premise.</p>
                 </div>
-                <div class="p-4 rounded-lg shadow-md" style="background-color: var(--wyllou-green-light);">
-                    <p class="text-lg md:text-xl font-bold mb-1" style="color: var(--wyllou-green-accent);">Mes 5-8</p>
-                    <p class="text-xs md:text-sm text-gray-700 font-semibold">El Caso Definitivo</p>
+                <div class="p-4 rounded-lg shadow-md border-t-4 pt-4" style="border-color: var(--wyllou-green-accent); background-color: var(--wyllou-green-light);">
+                    <p class="text-xl font-bold mb-1" style="color: var(--wyllou-green-dark);">Mes 5-8</p>
+                    <p class="text-sm text-gray-700 font-semibold">El Caso Definitivo</p>
                     <p class="text-xs md:text-sm text-gray-600">Demostrar **reducción del 30% en errores de diagnóstico** con datos duros. ROI innegable.</p>
                 </div>
-                <div class="p-4 rounded-lg shadow-md" style="background-color: var(--wyllou-green-light);">
-                    <p class="text-lg md:text-xl font-bold mb-1" style="color: var(--wyllou-green-accent);">Mes 8-12</p>
-                    <p class="text-xs md:text-sm text-gray-700 font-semibold">Expansión B2G</p>
+                <div class="p-4 rounded-lg shadow-md border-t-4 pt-4" style="border-color: var(--wyllou-green-accent); background-color: var(--wyllou-green-light);">
+                    <p class="text-xl font-bold mb-1" style="color: var(--wyllou-green-dark);">Mes 8-12</p>
+                    <p class="text-sm text-gray-700 font-semibold">Expansión B2G</p>
                     <p class="text-xs md:text-sm text-gray-600">Abordar clientes pagadores globales (Ministerios/Aseguradoras) con el caso de estudio.</p>
                 </div>
             </div>
 
-            <div class="mt-8 md:mt-12 text-left p-6 rounded-xl border-l-4" style="border-color: var(--wyllou-green-dark); background-color: var(--wyllou-green-light);">
+            <div class="mt-12 text-left p-6 rounded-xl border-l-4 border-l-green-900 shadow-xl" style="background-color: var(--wyllou-green-light);">
                 <h3 class="text-xl md:text-2xl font-bold mb-2" style="color: var(--wyllou-green-dark);">Equipo Fundador: La Ventaja Híbrida.</h3>
                 <p class="text-sm md:text-lg text-gray-700">**Ingenieros Deep Tech** (Motor Wyllou.com probado) + **Futuros Expertos de Dominio** (Medicina, Derecho, Educación). No somos solo tecnólogos de IA; somos el único equipo obsesionado con la **Trazabilidad** y la **Confianza**.</p>
             </div>
         </div>
     </section>
 
-    <!-- SLIDE 8: THE ASK & CLOSING -->
-    <section class="slide" data-slide="8">
-        <div class="text-center max-w-4xl">
-            <p class="text-sm font-semibold uppercase tracking-widest mb-4" style="color: var(--wyllou-green-accent);">CONCLUSIÓN & LLAMADO A LA ACCIÓN</p>
-            <h2 class="text-4xl md:text-6xl font-bold mb-8" style="color: var(--wyllou-green-dark);">
+    <!-- --------------------------------- -->
+    <!-- SECCIÓN 8: THE ASK & CLOSING (El Cierre) -->
+    <!-- --------------------------------- -->
+    <section id="inversion" class="pitch-section" style="background-color: var(--wyllou-green-dark); min-height: 80vh;">
+        <div class="text-center max-w-4xl px-4">
+            <p class="text-sm font-semibold uppercase tracking-widest mb-4 text-green-300">CONCLUSIÓN & LLAMADO A LA ACCIÓN</p>
+            <h2 class="text-4xl md:text-6xl font-bold mb-8 text-white">
                 Estamos Construyendo la Biblioteca de la Civilización.
             </h2>
-            <p class="text-lg md:text-2xl font-light text-gray-700 mb-10">
+            <p class="text-lg md:text-2xl font-light text-green-200 mb-10">
                 Esta es una oportunidad de infraestructura del mismo nivel que la búsqueda web o la computación en la nube.
             </p>
 
-            <div class="p-6 md:p-8 rounded-2xl mx-auto shadow-2xl" style="background-color: var(--wyllou-green-dark); max-width: 600px;">
+            <div class="p-6 md:p-8 rounded-2xl mx-auto shadow-2xl" style="background-color: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); max-width: 600px;">
                 <p class="text-xl md:text-3xl font-light text-white mb-2">Inversión Solicitada (Ronda Seed):</p>
-                <p class="text-4xl md:text-6xl font-extrabold text-white mb-6">$500,000 USD</p>
-                <p class="text-sm md:text-lg font-medium text-green-200">
+                <p class="text-5xl md:text-7xl font-extrabold text-white mb-6">$500,000 USD</p>
+                <p class="text-sm md:text-lg font-medium text-green-300">
                     Destinado a la contratación de 3 ingenieros de IA de clase mundial y nuestro primer líder de Ventas B2G, para ejecutar el plan Go-to-Market de 6 meses.
                 </p>
             </div>
 
-            <h3 class="text-xl md:text-3xl font-bold mt-10" style="color: var(--wyllou-green-accent);">¿Está listo para invertir en la capa de inteligencia del futuro?</h3>
+            <h3 class="text-2xl md:text-4xl font-bold mt-10 text-green-400">¿Está listo para invertir en la capa de inteligencia del futuro?</h3>
         </div>
     </section>
 
     <script>
-        let currentSlide = 1;
-        const totalSlides = 8;
-        const slides = document.querySelectorAll('.slide');
-        const pagination = document.getElementById('pagination');
+        const menuBtn = document.getElementById('menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
 
-        function updateSlide() {
-            slides.forEach((slide, index) => {
-                slide.classList.remove('active');
-                if (parseInt(slide.dataset.slide) === currentSlide) {
-                    slide.classList.add('active');
-                }
-            });
-            pagination.textContent = `Diapositiva ${currentSlide} de ${totalSlides}`;
-        }
-
-        function navigate(direction) {
-            let nextSlide = currentSlide + direction;
-            if (nextSlide >= 1 && nextSlide <= totalSlides) {
-                currentSlide = nextSlide;
-                updateSlide();
-            }
-        }
-
-        // Add touch/swipe support for mobile navigation
-        let touchstartX = 0;
-        let touchendX = 0;
-        
-        const gestureZone = document.body; // Use the entire body for swipe detection
-
-        gestureZone.addEventListener('touchstart', e => {
-            touchstartX = e.changedTouches[0].screenX;
-        }, false);
-
-        gestureZone.addEventListener('touchend', e => {
-            touchendX = e.changedTouches[0].screenX;
-            handleGesture();
-        }, false);
-
-        function handleGesture() {
-            const minSwipeDistance = 50; // Minimum distance for a recognized swipe
-            if (touchendX < touchstartX - minSwipeDistance) {
-                // Swiped Left (Next Slide)
-                navigate(1);
-            }
-            if (touchendX > touchstartX + minSwipeDistance) {
-                // Swiped Right (Previous Slide)
-                navigate(-1);
-            }
-        }
-
-
-        // Desktop/Tablet (Keyboard) Navigation
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'ArrowRight') {
-                navigate(1);
-            } else if (e.key === 'ArrowLeft') {
-                navigate(-1);
-            }
+        // Toggle para abrir/cerrar menú móvil
+        menuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
         });
 
-        // Initialize
-        document.addEventListener('DOMContentLoaded', () => {
-            updateSlide();
+        // Cerrar menú móvil al hacer clic en un enlace
+        const mobileMenuLinks = mobileMenu.querySelectorAll('a');
+        mobileMenuLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+            });
         });
     </script>
 </body>
