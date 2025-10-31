@@ -1,607 +1,375 @@
 <!DOCTYPE html>
-<html lang="es" class="scroll-smooth">
+<html lang="es">
 <head>
-    <meta charset="UTF-R">
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Análisis Interactivo - Wyllou LLC</title>
-    <!-- Chosen Palette: Calm Harmony (Light Warm Gray, Deep Blue Accent, White) -->
-    <!-- Application Structure Plan: SPA de página única con navegación superior fija (sticky). Scrolling suave impulsado por JS a secciones temáticas (Problema, Solución, Mercado, Modelo, etc.). Este enfoque no lineal, similar a un dashboard, permite a los inversores/usuarios explorar áreas clave del plan de negocio a su propio ritmo, lo cual es más usable que un documento estático y lineal. La interacción central es un conmutador en 'El Problema' para alternar entre los dolores Operacionales y Estratégicos, reflejando directamente la dicotomía central del informe. -->
-    <!-- Visualization & Content Choices: Resumen: 1. Informe: Modelo de Ingresos -> Objetivo: Mostrar enfoque en ARR -> Viz: Chart.js Donut (Conceptual: 80% ARR) -> Interacción: Tooltip al pasar el ratón -> Justificación: Enfatiza visualmente la estabilidad del ingreso recurrente. 2. Informe: NSM (TRPC) y Problema (Tiempo Perdido) -> Objetivo: Mostrar ROI -> Viz: Chart.js Gráfico de Barras ('Búsqueda Manual' vs 'Wyllow') -> Interacción: Tooltip al pasar el ratón -> Justificación: Cuantifica la propuesta de valor (tiempo ahorrado). 3. Informe: Estrategia GTM -> Objetivo: Mostrar flujo -> Viz: Diagrama HTML/Tailwind (cajas flexbox + flechas) -> Interacción: Estático -> Justificación: Visual simple y clara del proceso 'Land & Expand'. 4. Informe: Competencia -> Objetivo: Mostrar 'Moat' -> Viz: Tabla HTML/Tailwind (Matriz) -> Interacción: Estático -> Justificación: Posiciona claramente a Wyllow frente a competidores en diferenciadores clave (Seguridad, Precisión). -->
-    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <title>Wyllou - Pitch Deck (Ronda Seed)</title>
+    <!-- Restoring direct, non-bracketed URLs for Tailwind CSS and Inter font -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+        :root {
+            /* Vibrant Green Palette */
+            --wyllou-green-dark: #225C22; /* Deep, rich green */
+            --wyllou-green-accent: #4CAF50; /* Vibrant green for highlights */
+            --wyllou-green-light: #E8F5E9; /* Very light green for subtle backgrounds */
+            --wyllou-text: #1F2937; /* Dark Grey for body text */
+            --wyllou-bg-light: #F9FAFB;
+        }
         body {
-            font-family: 'Poppins', sans-serif;
+            font-family: 'Inter', sans-serif;
+            background-color: var(--wyllou-bg-light);
+            /* Important for full-screen slides and responsiveness */
+            margin: 0;
+            padding: 0;
+            overflow: hidden; 
         }
-        .chart-container {
-            position: relative;
-            width: 100%;
-            max-width: 400px;
-            margin-left: auto;
-            margin-right: auto;
-            height: 300px;
-            max-height: 350px;
+        .slide {
+            width: 100vw;
+            height: 100vh;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            /* Adjust padding for mobile/tablet */
+            padding: 2rem 1rem; /* Reduced padding on all sides */
+            box-sizing: border-box;
+            background-color: white;
+            transition: opacity 0.5s ease-in-out;
+            text-align: center; /* Center content on smaller screens */
         }
-        @media (min-width: 768px) {
-            .chart-container {
-                height: 350px;
-            }
+        .slide.active {
+            display: flex;
         }
-        .nav-button {
-            @apply px-3 py-2 text-sm font-medium text-gray-600 rounded-md hover:bg-gray-100 hover:text-lime-600 transition-colors;
+        /* Custom styles for the demo slide simulation */
+        .demo-card {
+            border: 1px solid #E5E7EB;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
         }
-        .nav-button-active {
-            @apply px-3 py-2 text-sm font-medium text-lime-700 bg-lime-50 rounded-md;
+        .citation-tag {
+            background-color: var(--wyllou-bg-light);
+            color: var(--wyllou-green-accent);
+            border: 1px solid var(--wyllou-green-accent);
+            font-size: 0.75rem;
         }
-        .problem-button-active {
-            @apply bg-lime-600 text-white;
-        }
-        .problem-button-inactive {
-            @apply bg-white text-gray-700 hover:bg-gray-100;
+
+        /* Ensure content in flex/grid scales down */
+        .slide h2 {
+            font-size: 2.25rem; /* Default for mobile/tablet (sm:text-4xl, md:text-5xl, lg:text-6xl) */
         }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-800">
+<body>
 
-    <header class="fixed top-0 left-0 right-0 bg-white shadow-md z-50 border-b border-gray-200">
-        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-16">
-                <div class="flex-shrink-0 flex items-center">
-                    <span class="text-2xl font-bold text-gray-900">Wyllou<span class="text-lime-500">.</span></span>
-                </div>
-                <div class="hidden md:block">
-                    <div class="ml-10 flex items-baseline space-x-4">
-                        <button data-target="inicio" class="nav-button">Inicio</button>
-                        <button data-target="problema" class="nav-button">El Problema</button>
-                        <button data-target="solucion" class="nav-button">Solución</button>
-                        <button data-target="ventaja" class="nav-button">Ventaja</button>
-                        <button data-target="mercado" class="nav-button">Mercado</button>
-                        <button data-target="modelo" class="nav-button">Modelo</button>
-                        <button data-target="metricas" class="nav-button">Métricas</button>
-                        <button data-target="equipo" class="nav-button">Equipo</button>
-                    </div>
-                </div>
-                <div class="md:hidden">
-                    <select id="mobile-nav" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
-                        <option value="inicio">Inicio</option>
-                        <option value="problema">El Problema</option>
-                        <option value="solucion">Solución</option>
-                        <option value="ventaja">Ventaja</option>
-                        <option value="mercado">Mercado</option>
-                        <option value="modelo">Modelo</option>
-                        <option value="metricas">Métricas</option>
-                        <option value="equipo">Equipo</option>
-                    </select>
-                </div>
-            </div>
-        </nav>
+    <!-- Logo and Navigation Indicator (Fixed Header) -->
+    <header class="fixed top-0 left-0 right-0 p-4 bg-white z-50 flex justify-between items-center border-b border-gray-100">
+        <div class="flex items-center space-x-2">
+            <!-- Wyllou Logo - CORRECTED with the provided image ID -->
+            <img src="uploaded:logosinfondo.png-d3113754-58f6-4d26-9aba-8744e86c97db" alt="Wyllou Logo" class="w-8 h-8"/>
+            <span class="text-xl font-bold text-gray-900">Wyllou</span>
+        </div>
+        <div id="pagination" class="text-gray-500 font-medium"></div>
     </header>
 
-    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 pt-24">
-
-        <section id="inicio" class="pt-8 -mt-20">
-            <div class="text-center bg-white p-8 rounded-xl shadow-lg border border-gray-100">
-                <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">Wyllou LLC</h1>
-                <p class="text-xl md:text-2xl text-gray-700 max-w-3xl mx-auto">
-                    La plataforma de IA privada que convierte el caos de millones de documentos en respuestas instantáneas, precisas y seguras.
-                </p>
+    <!-- SLIDE 1: TITLE & VISION -->
+    <section class="slide active" data-slide="1">
+        <div class="text-center max-w-4xl">
+            <!-- Responsive Text Size: large on desktop, smaller on mobile -->
+            <h1 class="text-5xl md:text-7xl font-extrabold mb-8" style="color: var(--wyllou-green-dark);">
+                Wyllou: <br>
+                <span style="color: var(--wyllou-green-accent);">La Infraestructura de la Confianza.</span>
+            </h1>
+            <h2 class="text-xl md:text-3xl font-light text-gray-600 mb-10">
+                Organizar todo el conocimiento experto de la humanidad y hacerlo universalmente accesible y útil.
+            </h2>
+            <div class="inline-block px-6 py-3 md:px-8 md:py-3 rounded-full text-white font-bold text-lg md:text-2xl" style="background-color: var(--wyllou-green-accent);">
+                Ronda Seed | Inversión Solicitada: $500K USD
             </div>
-            
-            <div class="mt-8 text-lg text-gray-700 space-y-4 max-w-4xl mx-auto">
-                <p>Bienvenido al análisis interactivo de Wyllou LLC. Esta aplicación le permite explorar los pilares fundamentales del plan de negocio, desde el problema crítico que resuelve hasta su arquitectura tecnológica y estrategia de mercado. El objetivo es traducir el denso informe de negocio en una experiencia clara y consumible.</p>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
-                    <div class="bg-white p-6 rounded-lg shadow border border-gray-100">
-                        <h3 class="text-xl font-semibold text-lime-700 mb-2">El Problema Central</h3>
-                        <p class="text-gray-600">Las empresas reguladas pierden del <span class="font-bold text-red-600">20% al 40%</span> del tiempo de sus empleados de alto valor en búsquedas manuales, enfrentando además un riesgo legal y de compliance paralizante.</p>
-                    </div>
-                    <div class="bg-white p-6 rounded-lg shadow border border-gray-100">
-                        <h3 class="text-xl font-semibold text-lime-700 mb-2">La Solución "Zero Trust"</h3>
-                        <p class="text-gray-600">Wyllou ofrece una IA <span class="font-bold text-green-600">100% privada y auditable</span> que opera dentro de la red del cliente, eliminando el riesgo de seguridad y devolviendo miles de horas de productividad.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <hr class="my-16 border-gray-200">
-
-        <section id="problema" class="pt-8 -mt-20">
-            <h2 class="text-3xl font-bold text-center mb-6">El Problema: Doble Costo</h2>
-            <p class="text-lg text-gray-700 max-w-3xl mx-auto text-center mb-8">Explore el doble desafío que Wyllou resuelve. Use los botones para alternar entre el costo de la ineficiencia operativa y el riesgo estratégico que enfrentan las empresas de alta regulación.</p>
-            
-            <div class="flex justify-center space-x-4 mb-8">
-                <button id="toggle-op" class="problem-button-active px-6 py-3 font-semibold rounded-lg shadow-md transition-all duration-300">
-                    Dolor Operacional (Costo)
-                </button>
-                <button id="toggle-strat" class="problem-button-inactive px-6 py-3 font-semibold rounded-lg shadow-md transition-all duration-300">
-                    Dolor Estratégico (Riesgo)
-                </button>
-            </div>
-
-            <div id="pain-operational" class="bg-white p-8 rounded-xl shadow-lg border border-gray-100 max-w-4xl mx-auto">
-                <h3 class="text-2xl font-semibold text-lime-700 mb-4">Parálisis del Conocimiento (La Fricción)</h3>
-                <p class="text-lg text-gray-600 mb-4">El cliente está ahogado en su propio conocimiento. La información vital está desconectada, enterrada y desestructurada en millones de archivos.</p>
-                <ul class="list-disc list-inside space-y-2 text-lg text-gray-700">
-                    <li>Profesionales de alto valor pierden miles de horas al año buscando y validando datos.</li>
-                    <li>Esta fricción insostenible es un pasivo oculto que frena la innovación y la productividad.</li>
-                    <li>La ineficiencia no es solo un costo, es una barrera al crecimiento.</li>
-                </ul>
-            </div>
-            
-            <div id="pain-strategic" class="bg-white p-8 rounded-xl shadow-lg border border-gray-100 max-w-4xl mx-auto hidden">
-                <h3 class="text-2xl font-semibold text-red-700 mb-4">Bomba de Tiempo Regulatoria (El Peligro)</h3>
-                <p class="text-lg text-gray-600 mb-4">Para sectores regulados (Finanzas, Legal, Salud), la dispersión de datos no es solo ineficiencia, es un riesgo de seguridad y una amenaza de compliance.</p>
-                <ul class="list-disc list-inside space-y-2 text-lg text-gray-700">
-                    <li>La incapacidad de demostrar compliance puede resultar en multas paralizantes.</li>
-                    <li>La exposición de datos sensibles por falta de control centralizado genera un daño reputacional irreversible.</li>
-                    <li>Este es el principal catalizador de la compra: mitigar un riesgo existencial.</li>
-                </ul>
-            </div>
-        </section>
-
-        <hr class="my-16 border-gray-200">
-
-        <section id="solucion" class="pt-8 -mt-20">
-            <h2 class="text-3xl font-bold text-center mb-6">La Solución y el Producto</h2>
-            <p class="text-lg text-gray-700 max-w-3xl mx-auto text-center mb-12">Esta sección detalla cómo la arquitectura "Zero Trust" y las características del producto abordan directamente los problemas de costo y riesgo, vendiendo "tranquilidad" como valor principal.</p>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
-                <div class="bg-lime-600 text-white p-8 rounded-xl shadow-xl">
-                    <h3 class="text-3xl font-bold mb-4">La Solución: IA Privada "Zero Trust"</h3>
-                    <p class="text-lg text-lime-100 mb-4">Wyllou transforma el pasivo (datos caóticos) en un activo (inteligencia instantánea). No vendemos solo IA; vendemos la **tranquilidad** para que las empresas reguladas puedan usarla.</p>
-                    <ul class="list-none space-y-4">
-                        <li class="flex items-start">
-                            <span class="text-2xl mr-3 text-lime-300">✓</span>
-                            <span class="text-lg text-lime-50">**Respuestas, No Documentos:** Devolvemos miles de horas al entregar respuestas sintetizadas y 100% auditables en segundos.</span>
-                        </li>
-                        <li class="flex items-start">
-                            <span class="text-2xl mr-3 text-lime-300">✓</span>
-                            <span class="text-lg text-lime-50">**Seguridad Real:** Arquitectura 100% On-Premise o VPC Privada. Los datos sensibles *nunca* abandonan la red del cliente.</span>
-                        </li>
-                    </ul>
-                </div>
-
-                <div class="bg-white p-8 rounded-xl shadow-lg border border-gray-100">
-                    <h3 class="text-2xl font-semibold text-gray-900 mb-6">Características del Producto</h3>
-                    <div class="space-y-5">
-                        <div class="p-4 rounded-lg bg-gray-50 border">
-                            <h4 class="text-lg font-semibold text-lime-700">Arquitectura de IA Privada (Zero Trust)</h4>
-                            <p class="text-gray-600">Se instala 100% en el entorno seguro del cliente. Elimina la barrera de adopción en sectores regulados.</p>
-                        </div>
-                        <div class="p-4 rounded-lg bg-gray-50 border">
-                            <h4 class="text-lg font-semibold text-lime-700">Búsqueda Híbrida Inteligente (Fine-Tuning + RAG)</h4>
-                            <p class="text-gray-600">La IA aprende la jerga interna y consulta datos en tiempo real, garantizando precisión y verificabilidad (citas a la fuente).</p>
-                        </div>
-                        <div class="p-4 rounded-lg bg-gray-50 border">
-                            <h4 class="text-lg font-semibold text-lime-700">Procesamiento Universal de Archivos</h4>
-                            <p class="text-gray-600">Ingiere y normaliza todo tipo de formatos (PDFs escaneados, contratos, informes) para hacer accesible cualquier dato.</p>
-                        </div>
-                        <div class="p-4 rounded-lg bg-gray-50 border">
-                            <h4 class="text-lg font-semibold text-lime-700">Interfaz Conversacional (Lenguaje Natural)</h4>
-                            <p class="text-gray-600">Curva de aprendizaje mínima. Los empleados hacen preguntas complejas y obtienen síntesis concisas.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-        
-        <hr class="my-16 border-gray-200">
-
-        <section id="ventaja" class="pt-8 -mt-20">
-            <h2 class="text-3xl font-bold text-center mb-6">Ventaja Competitiva (El "Moat")</h2>
-            <p class="text-lg text-gray-700 max-w-3xl mx-auto text-center mb-12">Aquí se analiza el 'foso' competitivo de Wyllou, basado en la "Trinidad de la Confianza". Esta trinidad nos da acceso a un mercado que la competencia genérica no puede tocar.</p>
-
-            <h3 class="text-2xl font-semibold text-center text-lime-700 mb-8">La Trinidad de la Confianza</h3>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-                <div class="bg-white p-6 rounded-lg shadow border border-gray-100">
-                    <h4 class="text-xl font-bold text-center text-gray-900 mb-2">1. Seguridad Innegociable</h4>
-                    <p class="text-gray-600 text-center">La arquitectura "Zero Trust" (On-premise) nos da acceso exclusivo a clientes de Finanzas y Legal que no pueden usar la nube pública.</p>
-                </div>
-                <div class="bg-white p-6 rounded-lg shadow border border-gray-100">
-                    <h4 class="text-xl font-bold text-center text-gray-900 mb-2">2. Precisión Verificable</h4>
-                    <p class="text-gray-600 text-center">Cada respuesta de la IA es auditable con una citación directa a la fuente, generando confianza total para decisiones críticas.</p>
-                </div>
-                <div class="bg-white p-6 rounded-lg shadow border border-gray-100">
-                    <h4 class="text-xl font-bold text-center text-gray-900 mb-2">3. Adopción Acelerada</h4>
-                    <p class="text-gray-600 text-center">Entregamos una solución "llave en mano" que da valor en semanas, no en años, sin que el cliente necesite un equipo de IA.</p>
-                </div>
-            </div>
-
-            <h3 class="text-2xl font-semibold text-center text-gray-900 mb-6">Panorama Competitivo</h3>
-            <div class="w-full max-w-4xl mx-auto overflow-x-auto">
-                <table class="w-full min-w-max bg-white rounded-lg shadow border border-gray-100">
-                    <thead class="bg-gray-100">
-                        <tr>
-                            <th class="p-4 text-left font-semibold text-gray-700">Competidor</th>
-                            <th class="p-4 text-center font-semibold text-gray-700">Seguridad (Zero Trust)</th>
-                            <th class="p-4 text-center font-semibold text-gray-700">Precisión (Auditable)</th>
-                            <th class="p-4 text-center font-semibold text-gray-700">Costo de Implementación</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-gray-200">
-                        <tr class="bg-lime-50">
-                            <td class="p-4 font-bold text-lime-700">Wyllou LLC</td>
-                            <td class="p-4 text-center font-bold text-green-600 text-2xl">✓✓✓</td>
-                            <td class="p-4 text-center font-bold text-green-600 text-2xl">✓✓✓</td>
-                            <td class="p-4 text-center font-semibold text-green-600">Bajo (Llave en Mano)</td>
-                        </tr>
-                        <tr>
-                            <td class="p-4 font-semibold text-gray-800">Gigantes Genéricos (Copilot, Gemini)</td>
-                            <td class="p-4 text-center font-bold text-red-600 text-2xl">X</td>
-                            <td class="p-4 text-center font-semibold text-yellow-600 text-2xl">✓</td>
-                            <td class="p-4 text-center text-gray-600">Medio (Integración)</td>
-                        </tr>
-                        <tr>
-                            <td class="p-4 font-semibold text-gray-800">Infraestructura Legacy (Elastic, AWS)</td>
-                            <td class="p-4 text-center font-semibold text-green-600 text-2xl">✓✓</td>
-                            <td class="p-4 text-center font-semibold text-yellow-600 text-2xl">?</td>
-                            <td class="p-4 text-center font-semibold text-red-600">Muy Alto (Requiere Equipo ML)</td>
-                        </tr>
-                        <tr>
-                            <td class="p-4 font-semibold text-gray-800">La Inercia (Statu Quo)</td>
-                            <td class="p-4 text-center text-gray-600">N/A</td>
-                            <td class="p-4 text-center font-bold text-red-600 text-2xl">X</td>
-                            <td class="p-4 text-center font-semibold text-red-600">Costo Oculto Masivo</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </section>
-
-        <hr class="my-16 border-gray-200">
-
-        <section id="mercado" class="pt-8 -mt-20">
-            <h2 class="text-3xl font-bold text-center mb-6">Mercado y Cliente Objetivo (ICP)</h2>
-            <p class="text-lg text-gray-700 max-w-3xl mx-auto text-center mb-12">Comprenda el perfil de cliente ideal (ICP) y los sectores objetivo. El motor de la compra no es la "innovación", es un requisito de "compliance" que es innegociable para ellos.</p>
-            
-            <div class="bg-white p-8 rounded-xl shadow-lg border border-gray-100 max-w-4xl mx-auto">
-                <h3 class="text-2xl font-semibold text-lime-700 mb-6 text-center">Perfil de Cliente Ideal (ICP)</h3>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center mb-8">
-                    <div class="bg-gray-50 p-4 rounded-lg border">
-                        <div class="text-3xl font-bold text-lime-600">500 - 5,000</div>
-                        <div class="text-gray-600 font-medium">Empleados</div>
-                    </div>
-                    <div class="bg-gray-50 p-4 rounded-lg border">
-                        <div class="text-3xl font-bold text-lime-600">+$50M USD</div>
-                        <div class="text-gray-600 font-medium">Facturación Anual</div>
-                    </div>
-                    <div class="bg-gray-50 p-4 rounded-lg border">
-                        <div class="text-3xl font-bold text-lime-600">+10 Años</div>
-                        <div class="text-gray-600 font-medium">Antigüedad</div>
-                    </div>
-                </div>
-
-                <h4 class="text-xl font-semibold text-gray-900 mb-4 text-center">Sectores de Alta Regulación y Densidad Documental</h4>
-                <div class="flex flex-wrap justify-center gap-4">
-                    <span class="bg-lime-100 text-lime-800 text-base font-medium px-4 py-2 rounded-full">Finanzas</span>
-                    <span class="bg-lime-100 text-lime-800 text-base font-medium px-4 py-2 rounded-full">Legal</span>
-                    <span class="bg-lime-100 text-lime-800 text-base font-medium px-4 py-2 rounded-full">Ingeniería</span>
-                    <span class="bg-lime-100 text-lime-800 text-base font-medium px-4 py-2 rounded-full">Energía</span>
-                    <span class="bg-lime-100 text-lime-800 text-base font-medium px-4 py-2 rounded-full">Salud</span>
-                </div>
-            </div>
-        </section>
-        
-        <hr class="my-16 border-gray-200">
-
-        <section id="modelo" class="pt-8 -mt-20">
-            <h2 class="text-3xl font-bold text-center mb-6">Modelo de Negocio y GTM</h2>
-            <p class="text-lg text-gray-700 max-w-3xl mx-auto text-center mb-12">Visualice cómo Wyllou genera ingresos y su plan de crecimiento. El gráfico destaca el enfoque en ingresos recurrentes (ARR), mientras que el diagrama ilustra la estrategia "Land & Expand".</p>
-
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-                
-                <div>
-                    <h3 class="text-2xl font-semibold text-gray-900 mb-6">Modelo de Negocio: SaaS Híbrido</h3>
-                    <div class="space-y-4">
-                        <div class="bg-white p-5 rounded-lg shadow border border-gray-100">
-                            <h4 class="text-lg font-semibold text-lime-700">1. Ingreso Recurrente (ARR) - Doble Motor</h4>
-                            <p class="text-gray-600">Suscripción anual basada en <span class="font-medium">Volumen de Datos</span> (GB procesados) y <span class="font-medium">Licencias de Usuario</span> (Seats).</p>
-                        </div>
-                        <div class="bg-white p-5 rounded-lg shadow border border-gray-100">
-                            <h4 class="text-lg font-semibold text-gray-800">2. Ingreso por Consumo (Pay-as-you-go)</h4>
-                            <p class="text-gray-600">Tarifas por tareas de alto cómputo (Ej. Fine-Tuning inicial del modelo).</p>
-                        </div>
-                        <div class="bg-white p-5 rounded-lg shadow border border-gray-100">
-                            <h4 class="text-lg font-semibold text-gray-800">3. Ingreso No Recurrente (One-Time)</h4>
-                            <p class="text-gray-600">Tarifa única de implementación, integración y onboarding.</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div>
-                    <h3 class="text-2xl font-semibold text-gray-900 mb-6 text-center">Enfoque: Maximizar ARR</h3>
-                    <div class="chart-container">
-                        <canvas id="revenueChart"></canvas>
-                    </div>
-                    <p class="text-center text-gray-600 mt-2">Visualización conceptual del flujo de ingresos objetivo.</p>
-                </div>
-
-            </div>
-
-            <div class="mt-16">
-                <h3 class="text-2xl font-semibold text-gray-900 mb-6 text-center">Estrategia Go-to-Market: "Land & Expand"</h3>
-                <div class="flex flex-col md:flex-row items-center justify-center gap-4 text-center">
-                    <div class="bg-white p-6 rounded-lg shadow border border-gray-100 w-full md:w-1/4">
-                        <div class="text-3xl font-bold text-lime-600 mb-2">FASE 1</div>
-                        <h4 class="text-lg font-semibold text-gray-800 mb-1">Aterrizar (Land)</h4>
-                        <p class="text-gray-600">Ataque a 50 cuentas objetivo. Lograr <span class="font-bold">3-5 Pilotos Pagados</span>.</p>
-                    </div>
-                    <div class="text-4xl font-bold text-lime-400 transform rotate-90 md:rotate-0">→</div>
-                    <div class="bg-white p-6 rounded-lg shadow border border-gray-100 w-full md:w-1/4">
-                        <div class="text-3xl font-bold text-lime-600 mb-2">FASE 2</div>
-                        <h4 class="text-lg font-semibold text-gray-800 mb-1">Expandir (Expand)</h4>
-                        <p class="text-gray-600">Usar casos de éxito para convertir pilotos en <span class="font-bold">contratos ARR multi-anuales</span>.</p>
-                    </div>
-                    <div class="text-4xl font-bold text-lime-400 transform rotate-90 md:rotate-0">→</div>
-                    <div class="bg-lime-50 p-6 rounded-lg shadow border border-lime-100 w-full md:w-1/Example 1 (Code Diff):
-/w-1/4">
-                        <div class="text-3xl font-bold text-green-600 mb-2">OBJETIVO</div>
-                        <h4 class="text-lg font-semibold text-gray-800 mb-1">Escalabilidad</h4>
-                        <p class="text-gray-600">Máquina de ventas predecible impulsada por <span class="font-bold">expansión interna</span> (Upsell).</p>
-                    </div>
-                </div>
-            </div>
-
-        </section>
-
-        <hr class="my-16 border-gray-200">
-
-        <section id="metricas" class="pt-8 -mt-20">
-            <h2 class="text-3xl font-bold text-center mb-6">Métrica Clave y Roadmap</h2>
-            <p class="text-lg text-gray-700 max-w-3xl mx-auto text-center mb-12">Esta sección se centra en la métrica clave (NSM) que mide el valor real del producto (no la actividad) y el plan de desarrollo inmediato para fortalecer el "moat" de confianza.</p>
-
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-                <div>
-                    <h3 class="text-2xl font-semibold text-gray-900 mb-4">Métrica Estrella (NSM)</h3>
-                    <div class="bg-white p-6 rounded-lg shadow border border-gray-100">
-                        <h4 class="text-xl font-bold text-lime-700 mb-2">Tasa de Resolución de Preguntas Críticas (TRPC)</h4>
-                        <p class="text-gray-600 font-medium mb-4">TRPC = (Nº Preguntas Críticas Resueltas) / (Nº Total de Búsquedas)</p>
-                        <p class="text-gray-700 mb-2"><span class="font-semibold">¿Qué es una "Pregunta Crítica"?</span> Una consulta que antes requería horas de búsqueda manual por un experto.</p>
-                        <p class="text-gray-700"><span class="font-semibold">¿Por qué importa?</span> Una TRPC alta demuestra que Wyllou es **indispensable**. Impulsa directamente la expansión del ARR (más datos, más usuarios) y mide el ROI en tiempo ahorrado.</p>
-                    </div>
-                </div>
-                
-                <div>
-                    <h3 class="text-2xl font-semibold text-gray-900 mb-4 text-center">Visualización del ROI (Tiempo)</h3>
-                    <div class="chart-container" style="max-width: 500px;">
-                        <canvas id="nsmChart"></canvas>
-                    </div>
-                    <p class="text-center text-gray-600 mt-2">Horas/Mes perdidas por equipo buscando información.</p>
-                </div>
-            </div>
-
-            <div class="mt-16 max-w-4xl mx-auto">
-                <h3 class="text-2xl font-semibold text-gray-900 mb-6 text-center">Roadmap (Próximos 4 Meses)</h3>
-                <div class="bg-white p-8 rounded-xl shadow-lg border border-gray-100">
-                    <ul class="list-decimal list-outside space-y-4 pl-6 text-lg text-gray-700">
-                        <li>
-                            <span class="font-semibold text-gray-900">Validación y Refinamiento de UX/UI:</span> Perfeccionar la interfaz basándose en el feedback de los clientes piloto para asegurar la retención y conversión a contratos ARR.
-                        </li>
-                        <li>
-                            <span class="font-semibold text-gray-900">Fortalecimiento del Moat de Trazabilidad:</span> Lanzar el "Dashboard de Auditoría y Transparencia" para reforzar la ventaja de precisión verificable.
-                        </li>
-                        <li>
-                            <span class="font-semibold text-gray-900">Monetización y Expansión:</span> Optimizar el motor de ingesta de datos y lanzar el dashboard de analíticas (TRPC) para medir el ROI y justificar la expansión del contrato.
-                        </li>
-                    </ul>
-                </div>
-            </div>
-
-        </section>
-
-        <hr class="my-16 border-gray-200">
-
-        <section id="equipo" class="pt-8 -mt-20">
-            <h2 class="text-3xl font-bold text-center mb-6">El Equipo Fundador</h2>
-            <p class="text-lg text-gray-700 max-w-3xl mx-auto text-center mb-12">Conozca al fundador detrás de la visión técnica y estratégica de Wyllou, cuya experiencia garantiza el control total sobre el "moat" de seguridad y la propiedad intelectual.</p>
-
-            <div class="max-w-md mx-auto bg-white p-8 rounded-xl shadow-lg border border-gray-100 text-center">
-                <h3 class="text-2xl font-semibold text-lime-700 mb-2">Juan Ardila</h3>
-                <p class="text-xl font-medium text-gray-800 mb-4">Fundador & CEO (100% Owner)</p>
-                <p class="text-lg text-gray-600 mb-6">
-                    <span class="font-semibold">+20 años de experiencia</span> liderando la arquitectura técnica y construyendo soluciones de software empresarial robustas, escalables y seguras.
-                </p>
-                <span class="inline-block bg-lime-100 text-lime-800 text-base font-medium px-4 py-2 rounded-full">Tecnología 100% Propietaria (In-House)</span>
-            </div>
-        </section>
-
-    </main>
-
-    <footer class="bg-gray-800 text-gray-300 mt-16">
-        <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 text-center">
-            <p>&copy; Wyllou LLC. Análisis Interactivo de Negocio.</p>
         </div>
-    </footer>
+    </section>
+
+    <!-- SLIDE 2: PROBLEM -->
+    <section class="slide" data-slide="2">
+        <div class="text-center max-w-4xl">
+            <p class="text-sm font-semibold uppercase tracking-widest mb-4" style="color: var(--wyllou-green-accent);">PROBLEMA</p>
+            <h2 class="text-4xl md:text-6xl font-bold mb-8" style="color: var(--wyllou-green-dark);">
+                La Asimetría Fatal del Conocimiento.
+            </h2>
+            <!-- Responsive Grid: 1 column on mobile, 3 columns on medium/large screens -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 text-left mt-10 md:mt-16">
+                <div class="p-4 md:p-6 rounded-lg shadow-md" style="background-color: var(--wyllou-green-light);">
+                    <p class="text-4xl md:text-5xl font-extrabold mb-2" style="color: var(--wyllou-green-accent);">90%</p>
+                    <p class="text-base md:text-lg font-medium text-gray-700">del conocimiento experto está en **Datos Oscuros** (PDFs, escaneos, archivos físicos) e inaccesible para la IA tradicional.</p>
+                </div>
+                <div class="p-4 md:p-6 rounded-lg shadow-md" style="background-color: var(--wyllou-green-light);">
+                    <p class="text-4xl md:text-5xl font-extrabold mb-2" style="color: var(--wyllou-green-accent);">99%</p>
+                    <p class="text-base md:text-lg font-medium text-gray-700">de la humanidad opera con **información incompleta** para tomar decisiones críticas (médicos, jueces, agricultores).</p>
+                </div>
+                <div class="p-4 md:p-6 rounded-lg shadow-md" style="background-color: var(--wyllou-green-light);">
+                    <p class="text-4xl md:text-5xl font-extrabold mb-2" style="color: var(--wyllou-green-accent);">Trillones</p>
+                    <p class="text-base md:text-lg font-medium text-gray-700">de dólares perdidos anualmente en errores médicos, ineficiencia legal y diagnóstico tardío por falta de acceso al conocimiento.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SLIDE 3: SOLUTION -->
+    <section class="slide" data-slide="3">
+        <div class="text-center max-w-5xl">
+            <p class="text-sm font-semibold uppercase tracking-widest mb-4" style="color: var(--wyllou-green-accent);">SOLUCIÓN: WYLLOU</p>
+            <h2 class="text-4xl md:text-6xl font-bold mb-10 md:mb-16" style="color: var(--wyllou-green-dark);">
+                El Núcleo de Conocimiento (Knowledge Core).
+            </h2>
+            <!-- Responsive Flex to Stacked Grid -->
+            <div class="flex flex-col md:flex-row justify-between items-start space-y-6 md:space-y-0 md:space-x-8">
+                <div class="flex-1 p-4 md:p-6 border-t-4 pt-4 md:pt-6 text-left rounded-lg w-full" style="border-color: var(--wyllou-green-accent);">
+                    <h3 class="text-xl md:text-2xl font-bold mb-3" style="color: var(--wyllou-green-dark);">1. INGESTA UNIVERSAL</h3>
+                    <p class="text-sm md:text-base text-gray-600">El Escáner de la Civilización: Extraemos datos de millones de **"Datos Oscuros"** (PDFs escaneados, informes técnicos en papel) que la competencia ignora.</p>
+                </div>
+                <div class="flex-1 p-4 md:p-6 border-t-4 pt-4 md:pt-6 text-left rounded-lg w-full" style="border-color: var(--wyllou-green-accent);">
+                    <h3 class="text-xl md:text-2xl font-bold mb-3" style="color: var(--wyllou-green-dark);">2. INDEXACIÓN SEMÁNTICA (RAG)</h3>
+                    <p class="text-sm md:text-base text-gray-600">Transformamos el caos en una Base de la Verdad. Utilizando arquitectura RAG, garantizamos la recuperación del conocimiento más relevante y contextual, no solo el más frecuente.</p>
+                </div>
+                <div class="flex-1 p-4 md:p-6 border-t-4 pt-4 md:pt-6 text-left rounded-lg w-full" style="border-color: var(--wyllou-green-accent);">
+                    <h3 class="text-xl md:text-2xl font-bold mb-3" style="color: var(--wyllou-green-dark);">3. SÍNTESIS CONFIABLE</h3>
+                    <p class="text-sm md:text-base text-gray-600">**Cero Alucinaciones y Trazabilidad:** Cada frase generada está 100% vinculada y verificada contra el documento fuente original. Esto es una necesidad, no un lujo, en sectores regulados.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SLIDE 4: DEMO/PRODUCT APPLICATION -->
+    <section class="slide" data-slide="4">
+        <div class="text-center max-w-5xl w-full">
+            <p class="text-sm font-semibold uppercase tracking-widest mb-4" style="color: var(--wyllou-green-accent);">APLICACIÓN DE NIVEL CIVILIZATORIO</p>
+            <h2 class="text-4xl md:text-5xl font-bold mb-8 md:mb-12" style="color: var(--wyllou-green-dark);">
+                Demo: La Memoria Médica Universal.
+            </h2>
+            <div class="demo-card rounded-xl p-6 md:p-8 bg-white text-left max-w-full">
+                <p class="text-sm md:text-base text-gray-500 italic mb-4">Query de un Médico Rural (África/Asia):</p>
+                <div class="p-3 md:p-4 rounded-lg bg-gray-100 mb-6 text-sm md:text-base text-gray-800 font-medium">
+                    "Diagnóstico diferencial para un niño con fiebre prolongada, hepatomegalia, y eosinofilia, sin historial de viaje reciente."
+                </div>
+
+                <div class="border-t pt-4">
+                    <p class="text-base md:text-lg font-semibold mb-3" style="color: var(--wyllou-green-accent);">Respuesta del Experto de IA Wyllou:</p>
+                    <p class="text-sm md:text-base text-gray-700 mb-4">
+                        La presentación clínica es atípica, requiriendo la consideración de síndromes poco frecuentes en zonas endémicas. La combinación de síntomas sugiere primariamente la **Histiocitosis de Células de Langerhans (LCH)**, debido a la tríada clásica, o una **Infección Parasitaria Oculta** no común.
+                        <span class="citation-tag inline-block ml-2 px-2 py-0.5 rounded-full font-semibold">Cita: Estudio Clínico NEJM 2024, p. 45</span>
+                    </p>
+                    <p class="text-sm md:text-base text-gray-700 mb-4">
+                        Secundariamente, debe descartarse la **Leishmaniasis Visceral** o la **Esquistosomiasis Ectópica**, incluso sin historial de viaje, debido al componente de eosinofilia y la hepatomegalia.
+                        <span class="citation-tag inline-block ml-2 px-2 py-0.5 rounded-full font-semibold">Cita: Manual de Patología Tropical, Cap. 3.2</span>
+                    </p>
+                    <p class="text-base md:text-xl font-bold mt-6" style="color: var(--wyllou-green-dark);">
+                        Resultado: Precisión de Clínica Mayo, citando la fuente con 100% de Trazabilidad.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SLIDE 5: MARKET SIZE & COMPETITION -->
+    <section class="slide" data-slide="5">
+        <div class="text-center max-w-5xl w-full">
+            <p class="text-sm font-semibold uppercase tracking-widest mb-4" style="color: var(--wyllou-green-accent);">MERCADO & ESTRATEGIA</p>
+            <h2 class="text-4xl md:text-6xl font-bold mb-8" style="color: var(--wyllou-green-dark);">
+                La Oportunidad de Infraestructura de $2.3T.
+            </h2>
+            <!-- Responsive Grid: 1 column on mobile, 2 columns on medium/large screens -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 mt-8 md:mt-12">
+                <div class="text-left p-6 rounded-xl shadow-md" style="background-color: var(--wyllou-green-light);">
+                    <h3 class="text-2xl md:text-3xl font-extrabold mb-4" style="color: var(--wyllou-green-accent);">Total Addressable Market (TAM)</h3>
+                    <ul class="space-y-3 text-base md:text-lg font-medium text-gray-700">
+                        <li>— Salud Digital Global: <span class="font-bold">$1.5 Trillones (2030)</span></li>
+                        <li>— EdTech Global: <span class="font-bold">$600 Billones (2028)</span></li>
+                        <li>— LegalTech + ClimateTech: <span class="font-bold">$280 Billones (2030)</span></li>
+                    </ul>
+                    <p class="text-base md:text-xl font-bold mt-4" style="color: var(--wyllou-green-dark);">No buscamos una fracción. Buscamos ser la capa de inteligencia fundamental.</p>
+                </div>
+                <div class="text-left p-6 rounded-xl shadow-md" style="background-color: var(--wyllou-green-light);">
+                    <h3 class="text-2xl md:text-3xl font-extrabold mb-4" style="color: var(--wyllou-green-accent);">Nuestra Ventaja (The Moat)</h3>
+                    <ol class="space-y-3 text-base md:text-lg font-medium text-gray-700">
+                        <li>**1. Foso de Datos Oscuros:** Tecnología central para ingestar el 90% del conocimiento que Google ignora.</li>
+                        <li>**2. Foso de Confianza:** Cero Alucinaciones + Trazabilidad. Único camino para la adopción en Medicina/Derecho.</li>
+                        <li>**3. Foso Federado:** Modelo On-Premise. Respetamos la soberanía de los datos de gobiernos y hospitales.</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SLIDE 6: BUSINESS MODEL & FINANCIALS -->
+    <section class="slide" data-slide="6">
+        <div class="text-center max-w-5xl w-full">
+            <p class="text-sm font-semibold uppercase tracking-widest mb-4" style="color: var(--wyllou-green-accent);">NEGOCIO</p>
+            <h2 class="text-4xl md:text-6xl font-bold mb-10 md:mb-12" style="color: var(--wyllou-green-dark);">
+                Modelo "Robin Hood": Rentabilidad y Expansión.
+            </h2>
+             <!-- Responsive Flex to Stacked Grid -->
+            <div class="flex flex-col md:flex-row justify-around items-stretch space-y-6 md:space-y-0 md:space-x-8">
+                <div class="flex-1 p-6 rounded-xl border-l-4 border-green-600 text-left shadow-lg" style="background-color: #D4EDDA;">
+                    <h3 class="text-xl md:text-3xl font-bold mb-3" style="color: #155724;">MOTOR DE INGRESOS (B2G/B2B)</h3>
+                    <ul class="text-sm md:text-base text-gray-700 space-y-2">
+                        <li>**Clientes:** Ministerios de Salud, Farmacéuticas, Aseguradoras.</li>
+                        <li>**Modelo:** Licenciamiento Anual On-Premise ($250K - $5M+ USD).</li>
+                        <li>**Margen Bruto Proyectado:** 90-95% (Modelo SaaS/Licencia).</li>
+                    </ul>
+                </div>
+                <div class="flex-1 p-6 rounded-xl border-l-4 border-green-600 text-left shadow-lg" style="background-color: #D4EDDA;">
+                    <h3 class="text-xl md:text-3xl font-bold mb-3" style="color: #155724;">IMPACTO & VIRALIDAD (B2P)</h3>
+                    <ul class="text-sm md:text-base text-gray-700 space-y-2">
+                        <li>**Usuarios:** Médicos rurales, Estudiantes, Ciudadanos.</li>
+                        <li>**Modelo:** Acceso Gratuito (Ej. Universidad Sin Muros, Justicia Global).</li>
+                        <li>**Resultado:** Crecimiento Orgánico Masivo (CAC B2P ≈ $0).</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="mt-8 md:mt-12 p-6 bg-white rounded-xl shadow-xl border-t border-gray-100">
+                 <!-- Financial Stats as responsive grid -->
+                <div class="grid grid-cols-3 gap-4">
+                    <div class="text-center">
+                        <p class="text-3xl md:text-4xl font-extrabold" style="color: var(--wyllou-green-dark);">$15M</p>
+                        <p class="text-xs md:text-lg font-medium text-gray-600">LTV por Cliente (10 años)</p>
+                    </div>
+                    <div class="text-center">
+                        <p class="text-3xl md:text-4xl font-extrabold" style="color: var(--wyllou-green-dark);">$75K</p>
+                        <p class="text-xs md:text-lg font-medium text-gray-600">CAC Proyectado (B2G)</p>
+                    </div>
+                    <div class="text-center">
+                        <p class="text-3xl md:text-4xl font-extrabold" style="color: var(--wyllou-green-accent);">200:1</p>
+                        <p class="text-xs md:text-lg font-medium text-gray-600">Ratio LTV/CAC Objetivo</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SLIDE 7: GO-TO-MARKET & TEAM -->
+    <section class="slide" data-slide="7">
+        <div class="text-center max-w-5xl w-full">
+            <p class="text-sm font-semibold uppercase tracking-widest mb-4" style="color: var(--wyllou-green-accent);">EQUIPO & EJECUCIÓN</p>
+            <h2 class="text-4xl md:text-6xl font-bold mb-10 md:mb-12" style="color: var(--wyllou-green-dark);">
+                Estrategia del Caballo de Troya (6-12 Meses).
+            </h2>
+            <!-- Responsive Grid: 2 columns on mobile, 4 columns on large screens -->
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 items-start">
+                <div class="p-4 rounded-lg shadow-md" style="background-color: var(--wyllou-green-light);">
+                    <p class="text-lg md:text-xl font-bold mb-1" style="color: var(--wyllou-green-accent);">Mes 1-2</p>
+                    <p class="text-xs md:text-sm text-gray-700 font-semibold">Foco Vertical</p>
+                    <p class="text-xs md:text-sm text-gray-600">Perfeccionar y lanzar **Memoria Médica Universal** (Vertical #1: Urgencia y Valor).</p>
+                </div>
+                <div class="p-4 rounded-lg shadow-md" style="background-color: var(--wyllou-green-light);">
+                    <p class="text-lg md:text-xl font-bold mb-1" style="color: var(--wyllou-green-accent);">Mes 3-4</p>
+                    <p class="text-xs md:text-sm text-gray-700 font-semibold">Alianza Estratégica</p>
+                    <p class="text-xs md:text-sm text-gray-600">Asegurar socio de prestigio (Ej. OMS, NIH) para PoC (Prueba de Concepto) On-Premise.</p>
+                </div>
+                <div class="p-4 rounded-lg shadow-md" style="background-color: var(--wyllou-green-light);">
+                    <p class="text-lg md:text-xl font-bold mb-1" style="color: var(--wyllou-green-accent);">Mes 5-8</p>
+                    <p class="text-xs md:text-sm text-gray-700 font-semibold">El Caso Definitivo</p>
+                    <p class="text-xs md:text-sm text-gray-600">Demostrar **reducción del 30% en errores de diagnóstico** con datos duros. ROI innegable.</p>
+                </div>
+                <div class="p-4 rounded-lg shadow-md" style="background-color: var(--wyllou-green-light);">
+                    <p class="text-lg md:text-xl font-bold mb-1" style="color: var(--wyllou-green-accent);">Mes 8-12</p>
+                    <p class="text-xs md:text-sm text-gray-700 font-semibold">Expansión B2G</p>
+                    <p class="text-xs md:text-sm text-gray-600">Abordar clientes pagadores globales (Ministerios/Aseguradoras) con el caso de estudio.</p>
+                </div>
+            </div>
+
+            <div class="mt-8 md:mt-12 text-left p-6 rounded-xl border-l-4" style="border-color: var(--wyllou-green-dark); background-color: var(--wyllou-green-light);">
+                <h3 class="text-xl md:text-2xl font-bold mb-2" style="color: var(--wyllou-green-dark);">Equipo Fundador: La Ventaja Híbrida.</h3>
+                <p class="text-sm md:text-lg text-gray-700">**Ingenieros Deep Tech** (Motor Wyllou.com probado) + **Futuros Expertos de Dominio** (Medicina, Derecho, Educación). No somos solo tecnólogos de IA; somos el único equipo obsesionado con la **Trazabilidad** y la **Confianza**.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- SLIDE 8: THE ASK & CLOSING -->
+    <section class="slide" data-slide="8">
+        <div class="text-center max-w-4xl">
+            <p class="text-sm font-semibold uppercase tracking-widest mb-4" style="color: var(--wyllou-green-accent);">CONCLUSIÓN & LLAMADO A LA ACCIÓN</p>
+            <h2 class="text-4xl md:text-6xl font-bold mb-8" style="color: var(--wyllou-green-dark);">
+                Estamos Construyendo la Biblioteca de la Civilización.
+            </h2>
+            <p class="text-lg md:text-2xl font-light text-gray-700 mb-10">
+                Esta es una oportunidad de infraestructura del mismo nivel que la búsqueda web o la computación en la nube.
+            </p>
+
+            <div class="p-6 md:p-8 rounded-2xl mx-auto shadow-2xl" style="background-color: var(--wyllou-green-dark); max-width: 600px;">
+                <p class="text-xl md:text-3xl font-light text-white mb-2">Inversión Solicitada (Ronda Seed):</p>
+                <p class="text-4xl md:text-6xl font-extrabold text-white mb-6">$500,000 USD</p>
+                <p class="text-sm md:text-lg font-medium text-green-200">
+                    Destinado a la contratación de 3 ingenieros de IA de clase mundial y nuestro primer líder de Ventas B2G, para ejecutar el plan Go-to-Market de 6 meses.
+                </p>
+            </div>
+
+            <h3 class="text-xl md:text-3xl font-bold mt-10" style="color: var(--wyllou-green-accent);">¿Está listo para invertir en la capa de inteligencia del futuro?</h3>
+        </div>
+    </section>
 
     <script>
+        let currentSlide = 1;
+        const totalSlides = 8;
+        const slides = document.querySelectorAll('.slide');
+        const pagination = document.getElementById('pagination');
+
+        function updateSlide() {
+            slides.forEach((slide, index) => {
+                slide.classList.remove('active');
+                if (parseInt(slide.dataset.slide) === currentSlide) {
+                    slide.classList.add('active');
+                }
+            });
+            pagination.textContent = `Diapositiva ${currentSlide} de ${totalSlides}`;
+        }
+
+        function navigate(direction) {
+            let nextSlide = currentSlide + direction;
+            if (nextSlide >= 1 && nextSlide <= totalSlides) {
+                currentSlide = nextSlide;
+                updateSlide();
+            }
+        }
+
+        // Add touch/swipe support for mobile navigation
+        let touchstartX = 0;
+        let touchendX = 0;
+        
+        const gestureZone = document.body; // Use the entire body for swipe detection
+
+        gestureZone.addEventListener('touchstart', e => {
+            touchstartX = e.changedTouches[0].screenX;
+        }, false);
+
+        gestureZone.addEventListener('touchend', e => {
+            touchendX = e.changedTouches[0].screenX;
+            handleGesture();
+        }, false);
+
+        function handleGesture() {
+            const minSwipeDistance = 50; // Minimum distance for a recognized swipe
+            if (touchendX < touchstartX - minSwipeDistance) {
+                // Swiped Left (Next Slide)
+                navigate(1);
+            }
+            if (touchendX > touchstartX + minSwipeDistance) {
+                // Swiped Right (Previous Slide)
+                navigate(-1);
+            }
+        }
+
+
+        // Desktop/Tablet (Keyboard) Navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') {
+                navigate(1);
+            } else if (e.key === 'ArrowLeft') {
+                navigate(-1);
+            }
+        });
+
+        // Initialize
         document.addEventListener('DOMContentLoaded', () => {
-            
-            function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
-                const words = text.split(' ');
-                let line = '';
-                let testLine = '';
-                let lineArray = [];
-
-                for(let n = 0; n < words.length; n++) {
-                    testLine += words[n] + ' ';
-                    let metrics = ctx.measureText(testLine);
-                    let testWidth = metrics.width;
-                    if (testWidth > maxWidth && n > 0) {
-                        lineArray.push(line);
-                        line = words[n] + ' ';
-                        testLine = words[n] + ' ';
-                    } else {
-                        line = testLine;
-                    }
-                }
-                lineArray.push(line);
-
-                for(let k = 0; k < lineArray.length; k++) {
-                    ctx.fillText(lineArray[k], x, y);
-                    y += lineHeight;
-                }
-            }
-            
-            function initRevenueChart() {
-                const ctx = document.getElementById('revenueChart').getContext('2d');
-                if (window.revenueChartInstance) {
-                    window.revenueChartInstance.destroy();
-                }
-                window.revenueChartInstance = new Chart(ctx, {
-                    type: 'doughnut',
-                    data: {
-                        labels: ['Ingreso Recurrente (ARR)', 'Consumo (IA)', 'Implementación (One-Time)'],
-                        datasets: [{
-                            label: 'Flujo de Ingresos (Conceptual)',
-                            data: [80, 15, 5],
-                            backgroundColor: [
-                                'rgb(101, 163, 13)', 
-                                'rgb(132, 204, 22)', 
-                                'rgb(190, 242, 100)' 
-                            ],
-                            borderColor: 'rgb(255, 255, 255)',
-                            borderWidth: 3
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: {
-                                position: 'bottom',
-                                labels: {
-                                    padding: 20,
-                                    font: {
-                                        family: 'Inter, sans-serif'
-                                    }
-                                }
-                            },
-                            tooltip: {
-                                callbacks: {
-                                    label: function(context) {
-                                        let label = context.label || '';
-                                        if (label) {
-                                            label += ': ';
-                                        }
-                                        if (context.parsed !== null) {
-                                            label += context.parsed + '%';
-                                        }
-                                        return label;
-                                    }
-                                },
-                                bodyFont: {
-                                    family: 'Inter, sans-serif'
-                                },
-                                titleFont: {
-                                    family: 'Inter, sans-serif'
-                                }
-                            }
-                        }
-                    }
-                });
-            }
-
-            function initNsmChart() {
-                const ctx = document.getElementById('nsmChart').getContext('2d');
-                if (window.nsmChartInstance) {
-                    window.nsmChartInstance.destroy();
-                }
-                window.nsmChartInstance = new Chart(ctx, {
-                    type: 'bar',
-                    data: {
-                        labels: ['Búsqueda Manual (Statu Quo)', 'Wyllou (con TRPC Alta)'],
-                        datasets: [{
-                            label: 'Horas/Mes Perdidas por Equipo',
-                            data: [160, 10], 
-                            backgroundColor: [
-                                'rgb(220, 38, 38)', 
-                                'rgb(77, 124, 15)'  
-                            ],
-                            borderRadius: 6
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        indexAxis: 'y',
-                        scales: {
-                            x: {
-                                beginAtZero: true,
-                                title: {
-                                    display: true,
-                                    text: 'Horas / Mes'
-                                }
-                            }
-                        },
-                        plugins: {
-                            legend: {
-                                display: false
-                            },
-                            tooltip: {
-                                bodyFont: {
-                                    family: 'Inter, sans-serif'
-                                },
-                                titleFont: {
-                                    family: 'Inter, sans-serif'
-                                }
-                            }
-                        }
-                    }
-                });
-            }
-
-            function setupNavigation() {
-                const navButtons = document.querySelectorAll('button[data-target]');
-                navButtons.forEach(button => {
-                    button.addEventListener('click', () => {
-                        const targetId = button.getAttribute('data-target');
-                        const targetElement = document.getElementById(targetId);
-                        if (targetElement) {
-                            targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                        }
-                    });
-                });
-
-                const mobileNav = document.getElementById('mobile-nav');
-                mobileNav.addEventListener('change', (e) => {
-                    const targetId = e.target.value;
-                    const targetElement = document.getElementById(targetId);
-                    if (targetElement) {
-                        targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                    }
-                });
-            }
-
-            function setupProblemToggler() {
-                const toggleOp = document.getElementById('toggle-op');
-                const toggleStrat = document.getElementById('toggle-strat');
-                const painOp = document.getElementById('pain-operational');
-                const painStrat = document.getElementById('pain-strategic');
-
-                toggleOp.addEventListener('click', () => {
-                    painOp.classList.remove('hidden');
-                    painStrat.classList.add('hidden');
-                    toggleOp.classList.add('problem-button-active');
-                    toggleOp.classList.remove('problem-button-inactive');
-                    toggleStrat.classList.add('problem-button-inactive');
-                    toggleStrat.classList.remove('problem-button-active');
-                });
-
-                toggleStrat.addEventListener('click', () => {
-                    painStrat.classList.remove('hidden');
-                    painOp.classList.add('hidden');
-                    toggleStrat.classList.add('problem-button-active');
-                    toggleStrat.classList.remove('problem-button-inactive');
-                    toggleOp.classList.add('problem-button-inactive');
-                    toggleOp.classList.remove('problem-button-active');
-                });
-            }
-
-            initRevenueChart();
-            initNsmChart();
-            setupNavigation();
-            setupProblemToggler();
+            updateSlide();
         });
     </script>
 </body>
