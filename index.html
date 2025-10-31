@@ -36,20 +36,20 @@
     <main>
         <!-- Hero Section -->
         <section class="hero">
+            <div class="hero-animation-container">
+                <div class="chat-simulation">
+                    <div class="chat-message user-query">
+                        <p id="user-query-text"></p>
+                    </div>
+                    <div class="chat-message bot-response">
+                        <p id="bot-response-text"></p>
+                    </div>
+                </div>
+            </div>
             <div class="hero-content">
                 <h1 class="hero-title">Organizar el conocimiento experto de la humanidad.</h1>
                 <p class="hero-subtitle">Creemos que el acceso al conocimiento es un derecho humano. Estamos construyendo el sistema operativo para la próxima era de la inteligencia, donde ninguna pregunta crítica quede sin respuesta.</p>
                 <a href="chat.html" class="cta-button hero-cta" target="_blank" rel="noopener noreferrer">Explora la Demo</a>
-            </div>
-            <div class="hero-animation-container">
-                <div class="chat-simulation">
-                    <div class="chat-message user-query">
-                        <p>> Diagnóstico diferencial para niño con fiebre prolongada y hepatomegalia.</p>
-                    </div>
-                    <div class="chat-message bot-response">
-                        <p>Sintetizando 1.2M de casos y estudios...<br>1. Leucemia Linfoblástica Aguda (Fuente: NEJM, 2023)<br>2. Enfermedad de Kawasaki (Fuente: The Lancet, 2022)<br>3. Infección por EBV (Fuente: J. of Pediatrics, 2021)<br><span class="recommendation">Recomendación: Hemograma completo y PCR.</span></p>
-                    </div>
-                </div>
             </div>
         </section>
 
@@ -232,6 +232,55 @@
                 currentContent.style.maxHeight = isActive ? currentContent.scrollHeight + "px" : '';
                 currentIcon.style.transform = isActive ? 'rotate(180deg)' : 'rotate(0deg)'; // Rotate the icon
             });
+        });
+    </script>
+    <script>
+        // --- Lógica para la Animación de Escritura del Chat ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const userQueryElement = document.getElementById('user-query-text');
+            const botResponseElement = document.getElementById('bot-response-text');
+
+            const userText = "> Diagnóstico diferencial para niño con fiebre prolongada y hepatomegalia.";
+            const botText = "Sintetizando 1.2M de casos y estudios...<br>1. Leucemia Linfoblástica Aguda (Fuente: NEJM, 2023)<br>2. Enfermedad de Kawasaki (Fuente: The Lancet, 2022)<br>3. Infección por EBV (Fuente: J. of Pediatrics, 2021)<br><span class=\"recommendation\">Recomendación: Hemograma completo y PCR.</span>";
+
+            const typingSpeed = 50; // ms por caracter
+            const userPause = 500; // Tiempo que el texto del usuario permanece visible (reducido a 1.5s)
+            const botPause = 3000; // Tiempo que el texto del bot permanece visible
+
+            function type(element, text, callback) {
+                element.parentElement.classList.add('typing');
+                let i = 0;
+                function typeChar() {
+                    if (i < text.length) {
+                        // Para manejar etiquetas HTML como <br> y <span>
+                        if (text.charAt(i) === '<') {
+                            const tagEnd = text.indexOf('>', i);
+                            element.innerHTML += text.substring(i, tagEnd + 1);
+                            i = tagEnd;
+                        } else {
+                            element.innerHTML += text.charAt(i);
+                        }
+                        i++;
+                        setTimeout(typeChar, typingSpeed);
+                    } else {
+                        element.parentElement.classList.remove('typing');
+                        if (callback) callback();
+                    }
+                }
+                typeChar();
+            }
+
+            function runChatCycle() {
+                botResponseElement.innerHTML = ''; // Limpiar respuesta anterior
+                type(userQueryElement, userText, () => {
+                    setTimeout(() => {
+                        // userQueryElement.innerHTML = ''; // No borrar la pregunta
+                        type(botResponseElement, botText, () => setTimeout(runChatCycle, botPause));
+                    }, userPause);
+                });
+            }
+
+            runChatCycle(); // Iniciar el ciclo
         });
     </script>
 
