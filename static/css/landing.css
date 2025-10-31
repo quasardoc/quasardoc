@@ -159,11 +159,15 @@ section {
     min-height: 80vh;
 }
 
+.hero-content {
+    /* No max-width needed, it will fill the grid column */
+}
+
 .hero-title {
     font-size: 3.5rem;
     font-weight: 800;
     line-height: 1.1;
-    background: linear-gradient(90deg, var(--text-light), var(--primary-accent));
+    background: linear-gradient(90deg, var(--text-light), #a7ffc4);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
@@ -174,16 +178,66 @@ section {
     margin: 1.5rem 0 2.5rem 0;
 }
 
-.hero-image-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+/* --- Hero Chat Animation --- */
+.hero-animation-container {
+    width: 100%;
+    max-width: 700px;
+    margin: 0 auto;
 }
 
-.hero-image {
-    max-width: 100%;
-    border-radius: 1rem;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+.chat-simulation {
+    background-color: #0e1014;
+    border: 1px solid var(--border-color);
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.9rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    text-align: left;
+}
+
+.chat-message {
+    overflow: hidden;
+    white-space: nowrap; /* Evita que el texto salte de línea durante la animación */
+    width: 0;
+    border-right: 2px solid rgba(255, 255, 255, .75);
+    box-sizing: content-box;
+}
+
+.user-query {
+    color: #a7ffc4;
+    /* Animación de escritura para la consulta del usuario */
+    animation: typing-user 12s steps(60, end) infinite, blink-caret .75s step-end infinite;
+}
+
+.bot-response {
+    color: #e0e0e0;
+    /* Animación de escritura para la respuesta del bot, con retraso */
+    animation: typing-bot 12s steps(150, end) infinite, blink-caret .75s step-end infinite;
+}
+
+.bot-response .recommendation {
+    color: #f9a825; /* Amarillo para destacar */
+    font-weight: bold;
+}
+
+/* Animación de escritura del usuario */
+@keyframes typing-user {
+    0%, 100% { width: 0; } /* Inicia y termina vacío */
+    25%, 90% { width: 100%; }   /* Escribe y se mantiene visible */
+}
+
+/* Animación de escritura del bot */
+@keyframes typing-bot {
+    0%, 29% { width: 0; } /* Permanece vacío hasta que el usuario termine */
+    30%, 75% { width: 100%; }  /* Escribe y se mantiene visible */
+    90%, 100% { width: 100%; } /* Mantiene el texto visible */
+}
+
+/* Animación del cursor parpadeante */
+@keyframes blink-caret {
+    from, to { border-color: transparent }
+    50% { border-color: rgba(255,255,255,.75); }
 }
 
 /* --- Problem Section --- */
@@ -471,7 +525,7 @@ cite { color: var(--text-medium); }
         grid-template-columns: 1fr;
         text-align: center;
     }
-    .hero-image-container { grid-row: 1; margin-bottom: 2rem; }
+    .hero-animation-container { grid-row: 1; margin-bottom: 2rem; }
     .hero-title { font-size: 2.5rem; }
 
     .section-title { font-size: 2rem; }
