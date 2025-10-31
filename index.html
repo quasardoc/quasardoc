@@ -244,15 +244,14 @@
             const botText = "Sintetizando 1.2M de casos y estudios...<br>1. Leucemia Linfoblástica Aguda (Fuente: NEJM, 2023)<br>2. Enfermedad de Kawasaki (Fuente: The Lancet, 2022)<br>3. Infección por EBV (Fuente: J. of Pediatrics, 2021)<br><span class=\"recommendation\">Recomendación: Hemograma completo y PCR.</span>";
 
             const typingSpeed = 50; // ms por caracter
-            const userPause = 500; // Tiempo que el texto del usuario permanece visible (reducido a 1.5s)
-            const botPause = 3000; // Tiempo que el texto del bot permanece visible
+            const userPause = 1500; // Pausa después de la pregunta
+            const botPause = 6000; // Pausa después de la respuesta
 
             function type(element, text, callback) {
                 element.parentElement.classList.add('typing');
                 let i = 0;
                 function typeChar() {
                     if (i < text.length) {
-                        // Para manejar etiquetas HTML como <br> y <span>
                         if (text.charAt(i) === '<') {
                             const tagEnd = text.indexOf('>', i);
                             element.innerHTML += text.substring(i, tagEnd + 1);
@@ -271,11 +270,15 @@
             }
 
             function runChatCycle() {
-                botResponseElement.innerHTML = ''; // Limpiar respuesta anterior
                 type(userQueryElement, userText, () => {
                     setTimeout(() => {
-                        // userQueryElement.innerHTML = ''; // No borrar la pregunta
-                        type(botResponseElement, botText, () => setTimeout(runChatCycle, botPause));
+                        type(botResponseElement, botText, () => {
+                            setTimeout(() => {
+                                userQueryElement.innerHTML = ''; // Borra la pregunta
+                                botResponseElement.innerHTML = ''; // Borra la respuesta
+                                runChatCycle(); // Reinicia el ciclo
+                            }, botPause);
+                        });
                     }, userPause);
                 });
             }

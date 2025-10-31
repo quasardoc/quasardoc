@@ -36,20 +36,20 @@
     <main>
         <!-- Hero Section -->
         <section class="hero">
+            <div class="hero-animation-container">
+                <div class="chat-simulation">
+                    <div class="chat-message user-query">
+                        <p id="user-query-text"></p>
+                    </div>
+                    <div class="chat-message bot-response">
+                        <p id="bot-response-text"></p>
+                    </div>
+                </div>
+            </div>
             <div class="hero-content">
                 <h1 class="hero-title">Organizing humanity's expert knowledge.</h1>
                 <p class="hero-subtitle">We believe that access to knowledge is a human right. We are building the operating system for the next era of intelligence, where no critical question goes unanswered.</p>
                 <a href="chat.html" class="cta-button hero-cta" target="_blank" rel="noopener noreferrer">Explore the Demo</a>
-            </div>
-            <div class="hero-animation-container">
-                <div class="chat-simulation">
-                    <div class="chat-message user-query">
-                        <p>> Differential diagnosis for a child with prolonged fever and hepatomegaly.</p>
-                    </div>
-                    <div class="chat-message bot-response">
-                        <p>Synthesizing 1.2M cases and studies...<br>1. Acute Lymphoblastic Leukemia (Source: NEJM, 2023)<br>2. Kawasaki Disease (Source: The Lancet, 2022)<br>3. EBV Infection (Source: J. of Pediatrics, 2021)<br><span class="recommendation">Recommendation: Complete blood count and CRP.</span></p>
-                    </div>
-                </div>
             </div>
         </section>
 
@@ -232,6 +232,59 @@
                 currentContent.style.maxHeight = isActive ? currentContent.scrollHeight + "px" : '';
                 currentIcon.style.transform = isActive ? 'rotate(180deg)' : 'rotate(0deg)'; // Rotate the icon
             });
+        });
+    </script>
+    <script>
+        // --- Logic for Chat Typing Animation ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const userQueryElement = document.getElementById('user-query-text');
+            const botResponseElement = document.getElementById('bot-response-text');
+
+            const userText = "> Differential diagnosis for a child with prolonged fever and hepatomegaly.";
+            const botText = "Synthesizing 1.2M cases and studies...<br>1. Acute Lymphoblastic Leukemia (Source: NEJM, 2023)<br>2. Kawasaki Disease (Source: The Lancet, 2022)<br>3. EBV Infection (Source: J. of Pediatrics, 2021)<br><span class=\"recommendation\">Recommendation: Complete blood count and CRP.</span>";
+
+            const typingSpeed = 50; // ms per character
+            const userPause = 1500; // Time the user text remains visible
+            const botPause = 6000; // Time the bot text remains visible
+
+            function type(element, text, callback) {
+                element.parentElement.classList.add('typing');
+                let i = 0;
+                function typeChar() {
+                    if (i < text.length) {
+                        // To handle HTML tags like <br> and <span>
+                        if (text.charAt(i) === '<') {
+                            const tagEnd = text.indexOf('>', i);
+                            element.innerHTML += text.substring(i, tagEnd + 1);
+                            i = tagEnd;
+                        } else {
+                            element.innerHTML += text.charAt(i);
+                        }
+                        i++;
+                        setTimeout(typeChar, typingSpeed);
+                    } else {
+                        element.parentElement.classList.remove('typing');
+                        if (callback) callback();
+                    }
+                }
+                typeChar();
+            }
+
+            function runChatCycle() {
+                type(userQueryElement, userText, () => {
+                    setTimeout(() => {
+                        type(botResponseElement, botText, () => {
+                            setTimeout(() => {
+                                userQueryElement.innerHTML = ''; // Clear the question
+                                botResponseElement.innerHTML = ''; // Clear the response
+                                runChatCycle(); // Restart the cycle
+                            }, botPause);
+                        });
+                    }, userPause);
+                });
+            }
+
+            runChatCycle(); // Start the cycle
         });
     </script>
 
