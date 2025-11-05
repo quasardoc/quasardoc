@@ -195,6 +195,9 @@ section {
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
     text-align: left;
 }
+.chat-simulation {
+    min-height: 320px; /* Fija una altura mínima para evitar el salto de página en la animación */
+}
 
 .chat-message {
     /* Se elimina overflow, max-width y la animación de width */
